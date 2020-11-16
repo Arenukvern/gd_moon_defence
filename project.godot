@@ -8,20 +8,34 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Node",
+"class": "UIState",
+"language": "GDScript",
+"path": "res://autoload/states/UIState.gd"
+} ]
 _global_script_class_icons={
-
+"UIState": ""
 }
 
 [application]
 
 config/name="Moon Colony Defender"
+run/main_scene="res://objects/levels/MoonFlat.tscn"
 config/icon="res://icon.png"
 
-[display]
+[autoload]
 
-window/stretch/mode="2d"
-window/stretch/aspect="expand"
+Steering="*res://autoload/Steering.gd"
+UIState="*res://autoload/states/UIState.tscn"
+
+[layer_names]
+
+2d_physics/layer_1="asteroids"
+2d_physics/layer_2="bullets"
+2d_physics/layer_3="people"
+2d_physics/layer_4="buildings"
+2d_physics/layer_5="ground"
 
 [rendering]
 
