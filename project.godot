@@ -26,8 +26,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
+UIState="*res://autoload/states/UIState.gd"
 Steering="*res://autoload/Steering.gd"
-UIState="*res://autoload/states/UIState.tscn"
 
 [layer_names]
 

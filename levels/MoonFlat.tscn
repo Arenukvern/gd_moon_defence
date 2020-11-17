@@ -1,16 +1,16 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://ui_debug/UIDebug.tscn" type="PackedScene" id=1]
-[ext_resource path="res://objects/asteroid/ice_watered/IceWateredAsteroid.tscn" type="PackedScene" id=2]
-[ext_resource path="res://assets/scribble_pack/Spritesheet/spritesheet_default.png" type="Texture" id=3]
-[ext_resource path="res://objects/turrel/lazered/LazerTurrel.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/scribble_pack/Spritesheet/spritesheet_default.png" type="Texture" id=2]
+[ext_resource path="res://objects/turrel/lazered/LazerTurrel.tscn" type="PackedScene" id=3]
+[ext_resource path="res://autoload/states/AsteroidsState.tscn" type="PackedScene" id=4]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
 
 [sub_resource type="TileSet" id=2]
 1/name = "oval pers"
-1/texture = ExtResource( 3 )
+1/texture = ExtResource( 2 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
 1/region = Rect2( 576, 256, 64, 256 )
@@ -26,7 +26,7 @@ points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
 1/shapes = [  ]
 1/z_index = 0
 2/name = "rect pers"
-2/texture = ExtResource( 3 )
+2/texture = ExtResource( 2 )
 2/tex_offset = Vector2( 0, 0 )
 2/modulate = Color( 1, 1, 1, 1 )
 2/region = Rect2( 576, 0, 64, 256 )
@@ -42,7 +42,7 @@ points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
 2/shapes = [  ]
 2/z_index = 0
 3/name = "ground"
-3/texture = ExtResource( 3 )
+3/texture = ExtResource( 2 )
 3/tex_offset = Vector2( 0, 0 )
 3/modulate = Color( 1, 1, 1, 1 )
 3/region = Rect2( 256, 192, 64, 64 )
@@ -67,9 +67,6 @@ __meta__ = {
 
 [node name="UIDebug" parent="CanvasLayer" instance=ExtResource( 1 )]
 
-[node name="IceWateredAsteroid" parent="." instance=ExtResource( 2 )]
-position = Vector2( 34.181, 67.1663 )
-
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 2 )
 collision_layer = 16
@@ -77,6 +74,10 @@ collision_mask = 0
 format = 1
 tile_data = PoolIntArray( 524288, 3, 0, 524289, 3, 0, 524290, 3, 0, 524291, 3, 0, 524292, 3, 0, 524293, 3, 0, 524294, 3, 0, 524295, 3, 0, 524296, 3, 0, 524297, 3, 0, 524298, 3, 0, 524299, 3, 0, 524300, 3, 0, 524301, 3, 0, 524302, 3, 0, 524303, 3, 0, 589824, 3, 0, 589825, 3, 0, 589826, 3, 0, 589827, 3, 0, 589828, 3, 0, 589829, 3, 0, 589830, 3, 0, 589831, 3, 0, 589832, 3, 0, 589833, 3, 0, 589834, 3, 0, 589835, 3, 0, 589836, 3, 0, 589837, 3, 0, 589838, 3, 0, 589839, 3, 0 )
 
-[node name="LazerTurrel" parent="." instance=ExtResource( 4 )]
+[node name="LazerTurrel" parent="." instance=ExtResource( 3 )]
 position = Vector2( 49.8737, 511.79 )
+
+[node name="Asteroids" parent="." instance=ExtResource( 4 )]
+scale = Vector2( 0, 1 )
+transform = Transform2D( 0, 0, 0, 1, 0, 0 )
 

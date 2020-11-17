@@ -10,9 +10,10 @@ var _target_global_position: = Vector2.ZERO
 func _ready() -> void:
 	var screen_dimension = OS.get_window_size()
 	randomize()
-	var start_x_position: = rand_range( 10,  screen_dimension.x)
+	var start_x_position: = rand_range( -10,  screen_dimension.x)
+	print(start_x_position)
 	sprite.position = Vector2(start_x_position, -50)
-	var target_x_position: = rand_range( 10,  screen_dimension.x)
+	var target_x_position: = rand_range( 0,  screen_dimension.x)
 	_target_global_position = Vector2(target_x_position,screen_dimension.y)
 
 
