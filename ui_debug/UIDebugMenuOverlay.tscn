@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://ui_debug/CloseButton.gd" type="Script" id=1]
 [ext_resource path="res://ui_debug/SpawnAsteroidsQuantityInput.gd" type="Script" id=2]
+[ext_resource path="res://ui_debug/AsteroidsStartMaxDistanceInput.gd" type="Script" id=3]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -26,26 +27,48 @@ margin_right = 267.0
 margin_bottom = 44.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MenuOverlay/MarginContainer"]
-margin_right = 268.0
-margin_bottom = 24.0
+margin_right = 261.0
+margin_bottom = 52.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MenuOverlay/MarginContainer/VBoxContainer"]
-margin_right = 268.0
+[node name="SpawnAsteroidsQuantity" type="HBoxContainer" parent="MenuOverlay/MarginContainer/VBoxContainer"]
+margin_right = 261.0
 margin_bottom = 24.0
 custom_constants/separation = 25
 
-[node name="SpawnAsteroidsQuantityLabel" type="Label" parent="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="SpawnAsteroidsQuantityLabel" type="Label" parent="MenuOverlay/MarginContainer/VBoxContainer/SpawnAsteroidsQuantity"]
 margin_top = 5.0
-margin_right = 185.0
+margin_right = 161.0
 margin_bottom = 19.0
-text = "Ice Asteroids spawn quantity"
+text = "Asteroids spawn quantity"
 
-[node name="SpawnAsteroidsQuantityInput" type="LineEdit" parent="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer"]
-margin_left = 210.0
-margin_right = 268.0
+[node name="SpawnAsteroidsQuantityInput" type="SpinBox" parent="MenuOverlay/MarginContainer/VBoxContainer/SpawnAsteroidsQuantity"]
+margin_left = 186.0
+margin_right = 260.0
 margin_bottom = 24.0
-placeholder_text = "1"
+min_value = 1.0
+value = 1.0
 script = ExtResource( 2 )
 
+[node name="AsteroidsStartMaxDistance" type="HBoxContainer" parent="MenuOverlay/MarginContainer/VBoxContainer"]
+margin_top = 28.0
+margin_right = 261.0
+margin_bottom = 52.0
+
+[node name="AsteroidsStartMaxDistanceLabel" type="Label" parent="MenuOverlay/MarginContainer/VBoxContainer/AsteroidsStartMaxDistance"]
+margin_top = 5.0
+margin_right = 183.0
+margin_bottom = 19.0
+text = "Asteroids start max distance"
+
+[node name="AsteroidsStartMaxDistanceInput" type="SpinBox" parent="MenuOverlay/MarginContainer/VBoxContainer/AsteroidsStartMaxDistance"]
+margin_left = 187.0
+margin_right = 261.0
+margin_bottom = 24.0
+min_value = 1.0
+max_value = 9999.0
+value = 1.0
+script = ExtResource( 3 )
+
 [connection signal="button_up" from="MenuOverlay/CloseButton" to="MenuOverlay/CloseButton" method="_on_CloseButton_button_up"]
-[connection signal="text_changed" from="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer/SpawnAsteroidsQuantityInput" to="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer/SpawnAsteroidsQuantityInput" method="_on_SpawnAsteroidsQuantityInput_text_changed"]
+[connection signal="value_changed" from="MenuOverlay/MarginContainer/VBoxContainer/SpawnAsteroidsQuantity/SpawnAsteroidsQuantityInput" to="MenuOverlay/MarginContainer/VBoxContainer/SpawnAsteroidsQuantity/SpawnAsteroidsQuantityInput" method="_on_SpawnAsteroidsQuantityInput_value_changed"]
+[connection signal="value_changed" from="MenuOverlay/MarginContainer/VBoxContainer/AsteroidsStartMaxDistance/AsteroidsStartMaxDistanceInput" to="MenuOverlay/MarginContainer/VBoxContainer/AsteroidsStartMaxDistance/AsteroidsStartMaxDistanceInput" method="_on_AsteroidsStartMaxDistanceInput_value_changed"]
