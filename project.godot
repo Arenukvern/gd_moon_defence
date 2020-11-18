@@ -28,6 +28,7 @@ config/icon="res://icon.png"
 
 UIState="*res://autoload/states/UIState.gd"
 Steering="*res://autoload/Steering.gd"
+AsteroidsState="*res://autoload/states/AsteroidsState.gd"
 
 [layer_names]
 

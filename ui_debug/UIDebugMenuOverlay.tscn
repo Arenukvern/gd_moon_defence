@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://ui_debug/CloseButton.gd" type="Script" id=1]
+[ext_resource path="res://ui_debug/SpawnAsteroidsQuantityInput.gd" type="Script" id=2]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -33,16 +34,18 @@ margin_right = 268.0
 margin_bottom = 24.0
 custom_constants/separation = 25
 
-[node name="Label" type="Label" parent="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="SpawnAsteroidsQuantityLabel" type="Label" parent="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer"]
 margin_top = 5.0
 margin_right = 185.0
 margin_bottom = 19.0
 text = "Ice Asteroids spawn quantity"
 
-[node name="LineEdit" type="LineEdit" parent="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="SpawnAsteroidsQuantityInput" type="LineEdit" parent="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer"]
 margin_left = 210.0
 margin_right = 268.0
 margin_bottom = 24.0
 placeholder_text = "1"
+script = ExtResource( 2 )
 
 [connection signal="button_up" from="MenuOverlay/CloseButton" to="MenuOverlay/CloseButton" method="_on_CloseButton_button_up"]
+[connection signal="text_changed" from="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer/SpawnAsteroidsQuantityInput" to="MenuOverlay/MarginContainer/VBoxContainer/HBoxContainer/SpawnAsteroidsQuantityInput" method="_on_SpawnAsteroidsQuantityInput_text_changed"]

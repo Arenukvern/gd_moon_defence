@@ -16,8 +16,6 @@ func _on_debug_menu_state_updated(enabled: bool) -> void:
 		var overlayScene: = preload("res://ui_debug/UIDebugMenuOverlay.tscn")
 		var overlayInstance: = overlayScene.instance()
 		overlayInstance.set_name('MenuOverlay')
-		var screen_dimension: = OS.get_window_size()
-		var windowHeight: = screen_dimension.y
 		rootNode.add_child(overlayInstance)
 	else:
 		rootNode.remove_child($'MenuOverlay'.queue_free())

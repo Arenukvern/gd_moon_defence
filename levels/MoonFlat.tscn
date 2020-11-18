@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ui_debug/UIDebug.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/scribble_pack/Spritesheet/spritesheet_default.png" type="Texture" id=2]
 [ext_resource path="res://objects/turrel/lazered/LazerTurrel.tscn" type="PackedScene" id=3]
-[ext_resource path="res://autoload/states/AsteroidsState.tscn" type="PackedScene" id=4]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
@@ -64,6 +63,7 @@ __meta__ = {
 }
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+editor/display_folded = true
 
 [node name="UIDebug" parent="CanvasLayer" instance=ExtResource( 1 )]
 
@@ -76,8 +76,4 @@ tile_data = PoolIntArray( 524288, 3, 0, 524289, 3, 0, 524290, 3, 0, 524291, 3, 0
 
 [node name="LazerTurrel" parent="." instance=ExtResource( 3 )]
 position = Vector2( 49.8737, 511.79 )
-
-[node name="Asteroids" parent="." instance=ExtResource( 4 )]
-scale = Vector2( 0, 1 )
-transform = Transform2D( 0, 0, 0, 1, 0, 0 )
 
