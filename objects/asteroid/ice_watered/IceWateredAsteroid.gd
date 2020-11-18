@@ -13,7 +13,6 @@ var _target_global_position: = Vector2.ZERO
 func _ready() -> void:
 	randomize()
 	var start_distance_surface_edge = rand_range( 1, AsteroidsState.asteroidStartMaxDistance)
-	print(start_distance_surface_edge)
 	randomize()
 	var start_x_position: = rand_range( -10,  _screen_dimension.x)
 	global_position = Vector2(start_x_position, - start_distance_surface_edge)
