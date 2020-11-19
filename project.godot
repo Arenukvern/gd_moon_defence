@@ -27,13 +27,15 @@ config/icon="res://icon.png"
 [autoload]
 
 UIState="*res://autoload/states/UIState.gd"
+PhisicsState="*res://autoload/states/PhisicsState.gd"
 Steering="*res://autoload/Steering.gd"
 AsteroidsState="*res://autoload/states/AsteroidsState.gd"
+DroidsState="*res://autoload/states/DroidsState.gd"
 
 [layer_names]
 
 2d_physics/layer_1="asteroids"
-2d_physics/layer_2="bullets"
+2d_physics/layer_2="droids"
 2d_physics/layer_3="people"
 2d_physics/layer_4="buildings"
 2d_physics/layer_5="ground"
