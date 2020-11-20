@@ -1,8 +1,9 @@
 extends Area2D
 
+signal enable_tractor_beam
+
 class_name ShortRangeSensor
 
-signal enable_tractor_beam
 const signal_name_enable_tractor_beam: = 'enable_tractor_beam'
 const signal_func_name_enable_tractor_beam: = "_on_%s" % signal_name_enable_tractor_beam
 

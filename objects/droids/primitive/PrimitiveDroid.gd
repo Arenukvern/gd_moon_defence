@@ -25,7 +25,7 @@ func set_is_short_range_sensor_enabled(isEnable: bool)->void:
 
 	if isEnable:
 		_shortRangeSensor = ShortRangeSensor.instance()
-		root.connect(
+		_shortRangeSensor.connect(
 			_shortRangeSensor.signal_name_enable_tractor_beam, 
 			self, 
 			_shortRangeSensor.signal_func_name_enable_tractor_beam
@@ -112,7 +112,7 @@ func _eat_idle_fuel()-> void:
 		fuel_left -= _sensorFuelConsumption
 
 
-func _on_shortRangeSensor_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
+func _on_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
 #	TODO: implement tractor beam for asteroids
 	return
 
