@@ -98,6 +98,7 @@ tile_data = PoolIntArray( 458760, 4, 0, 458761, 4, 0, 458762, 4, 0, 524288, 3, 0
 position = Vector2( 49.8737, 511.79 )
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="."]
+editor/display_folded = true
 layer = 100
 
 [node name="Info" parent="CanvasLayer2" instance=ExtResource( 4 )]
