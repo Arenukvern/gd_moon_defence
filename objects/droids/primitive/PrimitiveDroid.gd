@@ -7,12 +7,31 @@ export var acceleration_explosive_min: = 300.0
 export var acceleration_explosive_max: = 400.0
 export var DISTANCE_THRESHOLD: = 3.0
 export var fuel_capacity: = 2000.0
-export var fuel_left: = 2000.0
+export var fuel_left: = 10000.0
 export var is_drop_droid: = false
 # Fuel consumption when droid is not moving
 export var idle_fuel_consumption: = 1.0
-
+export var debug_is_fuel_infinite: = true
 onready var root: KinematicBody2D = $'.'
+
+# TRACTOR BEAM SECTION
+export var is_tractor_beam_enabled:= false setget set_is_tractor_beam_enabled
+const TractorBeam: = preload('res://objects/droids/primitive/TractorBeam.tscn')
+var _tractorBeam: Area2D
+var _tractorBeamFuelConsumption: float = 0.0
+func set_is_tractor_beam_enabled(isEnable: bool)->void:
+	is_tractor_beam_enabled = isEnable
+	if isEnable:
+		_tractorBeam = TractorBeam.instance()
+		_tractorBeamFuelConsumption = _tractorBeam.fuel_consumption
+		root.call_deferred("add_child",_tractorBeam)
+	elif _tractorBeam != null:
+		_tractorBeam.queue_free()
+		_tractorBeamFuelConsumption = 0.0
+		
+
+# TRACTOR BEAM OBJECT
+var tractor_beam_object: PhysicsBody2D
 
 # SENSOR SECTION
 export var is_short_range_sensor_enabled: = false setget set_is_short_range_sensor_enabled
@@ -65,7 +84,7 @@ func _physics_process(delta: float) -> void:
 	if target_global_position == Vector2.ZERO or _acceleration_current >= _acceleration_explosition: 
 		queue_free()
 #		TODO: make explosition
-	if not is_drop_droid && fuel_left <= 0:
+	if not is_drop_droid && fuel_left <= 0 && not debug_is_fuel_infinite:
 		self.is_short_range_sensor_enabled = false
 		_drop_droid()
 		return
@@ -84,9 +103,11 @@ func _physics_process(delta: float) -> void:
 	)
 	_velocity = move_and_slide(_velocity)
 	_sprite.rotation = _velocity.angle()
+	_eat_tractor_beam_fuel()
 	
 #	calculate distance to eat fuel
 	_recalculate_distances()
+	
 	
 # recalculates already made distance and distance left
 # before fuel will go out
@@ -112,7 +133,17 @@ func _eat_idle_fuel()-> void:
 		fuel_left -= _sensorFuelConsumption
 
 
-func _on_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
-#	TODO: implement tractor beam for asteroids
-	return
 
+func _on_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
+	self.is_tractor_beam_enabled = true
+	tractor_beam_object = collisionObject
+	return
+	
+func _eat_tractor_beam_fuel():
+	if is_tractor_beam_enabled:
+		if tractor_beam_object == null:
+			self.is_tractor_beam_enabled = false
+		elif tractor_beam_object is Asteroid:
+			print({'asteroid_mass':tractor_beam_object.get('mass')})
+			fuel_left -= (_tractorBeamFuelConsumption  )
+		
