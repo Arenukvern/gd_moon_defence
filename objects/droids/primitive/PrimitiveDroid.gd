@@ -7,10 +7,34 @@ export var acceleration_explosive_min: = 300.0
 export var acceleration_explosive_max: = 400.0
 export var DISTANCE_THRESHOLD: = 3.0
 export var fuel_capacity: = 2000.0
-export var fuel_left: = 1000.0
+export var fuel_left: = 2000.0
 export var is_drop_droid: = false
 # Fuel consumption when droid is not moving
 export var idle_fuel_consumption: = 1.0
+
+onready var root: KinematicBody2D = $'.'
+
+# SENSOR SECTION
+export var is_short_range_sensor_enabled: = false setget set_is_short_range_sensor_enabled
+const ShortRangeSensor: = preload('res://objects/droids/primitive/ShortRangeSensor.tscn')
+var _shortRangeSensor: Area2D 
+var _sensorFuelConsumption: float = 0.0
+
+func set_is_short_range_sensor_enabled(isEnable: bool)->void:
+	is_short_range_sensor_enabled = isEnable
+
+	if isEnable:
+		_shortRangeSensor = ShortRangeSensor.instance()
+		root.connect(
+			_shortRangeSensor.signal_name_enable_tractor_beam, 
+			self, 
+			_shortRangeSensor.signal_func_name_enable_tractor_beam
+		)
+		_sensorFuelConsumption = _shortRangeSensor.fuel_consumption
+		root.add_child(_shortRangeSensor)
+	elif root.has_node('ShortRangeSensor'):
+		_shortRangeSensor.queue_free()
+		_sensorFuelConsumption = 0.0
 
 var target_global_position: = Vector2.ZERO
 var initial_position: = Vector2.ZERO
@@ -42,11 +66,14 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 #		TODO: make explosition
 	if not is_drop_droid && fuel_left <= 0:
+		self.is_short_range_sensor_enabled = false
 		_drop_droid()
 		return
 		
 	if global_position.distance_to(target_global_position) < DISTANCE_THRESHOLD :
 		#		stopping droid
+		if not is_short_range_sensor_enabled:
+			self.is_short_range_sensor_enabled = true
 		_eat_idle_fuel()
 		return
 	_velocity = Steering.follow(
@@ -81,5 +108,11 @@ func _drop_droid()->void:
 	
 func _eat_idle_fuel()-> void:
 	fuel_left -= idle_fuel_consumption
-	print(fuel_left)
-		
+	if self.is_short_range_sensor_enabled:
+		fuel_left -= _sensorFuelConsumption
+
+
+func _on_shortRangeSensor_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
+#	TODO: implement tractor beam for asteroids
+	return
+

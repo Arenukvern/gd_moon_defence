@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Area2D",
+"class": "ShortRangeSensor",
+"language": "GDScript",
+"path": "res://objects/droids/primitive/ShortRangeSensor.gd"
+}, {
 "base": "Node",
 "class": "UIState",
 "language": "GDScript",
 "path": "res://autoload/states/UIState.gd"
 } ]
 _global_script_class_icons={
+"ShortRangeSensor": "",
 "UIState": ""
 }
 

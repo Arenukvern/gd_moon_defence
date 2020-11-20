@@ -8,9 +8,9 @@ const overlayScene: = preload("res://ui_debug/UIDebugMenuOverlay.tscn")
 
 func _ready() -> void:
 	uiState.connect(
-		uiState.debug_menu_state_updated_signal_name, 
+		uiState.signal_name_debug_menu_state_updated, 
 		self, 
-		uiState.on_debug_menu_state_updated_func_name
+		uiState.signal_func_name_debug_menu_state_updated
 	)
 
 func _on_debug_menu_state_updated(enabled: bool) -> void:
