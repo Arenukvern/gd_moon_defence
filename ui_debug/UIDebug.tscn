@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://ui_debug/UIDebug.gd" type="Script" id=1]
 [ext_resource path="res://ui_debug/OpenButton.gd" type="Script" id=2]
 [ext_resource path="res://ui_debug/SpawnAsteroids.gd" type="Script" id=3]
+[ext_resource path="res://ui_debug/SpawnAsteroid.gd" type="Script" id=4]
 
 [node name="UIDebug" type="Control"]
 pause_mode = 2
@@ -14,11 +15,11 @@ script = ExtResource( 1 )
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -115.0
-margin_bottom = 44.0
+margin_left = -237.0
+margin_bottom = 88.0
 
 [node name="OpenButton" type="Button" parent="VBoxContainer"]
-margin_right = 115.0
+margin_right = 237.0
 margin_bottom = 20.0
 text = "Debug menu"
 flat = true
@@ -26,11 +27,32 @@ script = ExtResource( 2 )
 
 [node name="SpawnAsteroids" type="Button" parent="VBoxContainer"]
 margin_top = 24.0
-margin_right = 115.0
+margin_right = 237.0
 margin_bottom = 44.0
 text = "Spawn asteroids"
 flat = true
 script = ExtResource( 3 )
 
+[node name="SpawnAsteroidToMouseClick" type="HBoxContainer" parent="VBoxContainer"]
+editor/display_folded = true
+margin_top = 48.0
+margin_right = 237.0
+margin_bottom = 88.0
+script = ExtResource( 4 )
+
+[node name="SpawnAsteroidToMouseClickButton" type="Button" parent="VBoxContainer/SpawnAsteroidToMouseClick"]
+margin_right = 157.0
+margin_bottom = 40.0
+custom_colors/font_color_disabled = Color( 0.501961, 0.113725, 0.113725, 1 )
+text = "Spawn asteroid in click"
+flat = true
+
+[node name="SpawnAsteroidMouseClickCheckButton" type="CheckButton" parent="VBoxContainer/SpawnAsteroidToMouseClick"]
+margin_left = 161.0
+margin_right = 237.0
+margin_bottom = 40.0
+
 [connection signal="button_up" from="VBoxContainer/OpenButton" to="VBoxContainer/OpenButton" method="_on_OpenButton_button_up"]
 [connection signal="button_up" from="VBoxContainer/SpawnAsteroids" to="VBoxContainer/SpawnAsteroids" method="_on_SpawnAsteroids_button_up"]
+[connection signal="button_up" from="VBoxContainer/SpawnAsteroidToMouseClick/SpawnAsteroidToMouseClickButton" to="VBoxContainer/SpawnAsteroidToMouseClick" method="_on_SpawnAsteroidToMouseClickButton_button_up"]
+[connection signal="button_up" from="VBoxContainer/SpawnAsteroidToMouseClick/SpawnAsteroidMouseClickCheckButton" to="VBoxContainer/SpawnAsteroidToMouseClick" method="_on_SpawnAsteroidMouseClickCheckButton_button_up"]

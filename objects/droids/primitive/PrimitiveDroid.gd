@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+class_name PrimitiveDroid
+
 export var health_max: = 200.0
 export var damage_points: = 100.0
 
@@ -7,28 +9,40 @@ export var acceleration_for_landing: = 20.0
 export var acceleration_initial: = 100.0
 export var acceleration_explosive_min: = 300.0
 export var acceleration_explosive_max: = 400.0
+# current acceleration
+var _acceleration_current: = 0.0
+# current random acceleration when player can risk to run plasma
+# but it can exlosure if the acceleration_current will be more than
+# critical
+var _acceleration_explosition: = 0.0
+# distance between target position and current position 
+# droid should stop
 export var DISTANCE_THRESHOLD: = 3.0
-export var fuel_capacity: = 2000.0
-export var fuel_left: = 7000.0
+
+export var fuel_capacity: = 10000.0
+export var fuel_left: = 4000.0
+export var fuel_reserve_limit: = 300.0
 export var is_drop_droid: = false
 # Fuel consumption when droid is not moving
 export var idle_fuel_consumption: = 1.0
+export var fuel_flying_consumption: = 2.0
 export var debug_is_fuel_infinite: = false
+export var is_goto_platform_to_refuel_in_any_cases: = false
 onready var root: KinematicBody2D = $'.'
 
 # TRACTOR BEAM SECTION
 export var is_tractor_beam_enabled:= false setget set_is_tractor_beam_enabled
 const TractorBeam: = preload('res://objects/droids/primitive/TractorBeam.tscn')
-var _tractorBeam: Area2D
+var _tractorBeam: TractorBeam
 var _tractorBeamFuelConsumption: float = 0.0
 func set_is_tractor_beam_enabled(isEnable: bool)->void:
 	is_tractor_beam_enabled = isEnable
-	if isEnable:
+	if isEnable and not is_instance_valid(_tractorBeam):
 		_acceleration_current = acceleration_for_landing
 		_tractorBeam = TractorBeam.instance()
 		_tractorBeamFuelConsumption = _tractorBeam.fuel_consumption
 		root.call_deferred("add_child",_tractorBeam)
-	elif _tractorBeam != null:
+	elif is_instance_valid(_tractorBeam):
 		_tractorBeam.queue_free()
 		_tractorBeamFuelConsumption = 0.0
 		
@@ -39,12 +53,12 @@ var tractor_beam_object: PhysicsBody2D
 # SENSOR SECTION
 export var is_short_range_sensor_enabled: = false setget set_is_short_range_sensor_enabled
 const ShortRangeSensor: = preload('res://objects/droids/primitive/ShortRangeSensor.tscn')
-var _shortRangeSensor: Area2D 
+var _shortRangeSensor: ShortRangeSensor 
 var _sensorFuelConsumption: float = 0.0
 
 func set_is_short_range_sensor_enabled(isEnable: bool)->void:
 
-	if isEnable && not is_short_range_sensor_enabled:
+	if isEnable and not is_short_range_sensor_enabled:
 		is_short_range_sensor_enabled = isEnable
 		_shortRangeSensor = ShortRangeSensor.instance()
 		_shortRangeSensor.connect(
@@ -55,25 +69,29 @@ func set_is_short_range_sensor_enabled(isEnable: bool)->void:
 		_sensorFuelConsumption = _shortRangeSensor.fuel_consumption
 		root.add_child(_shortRangeSensor)
 		return
-	elif _shortRangeSensor != null:
+	elif is_instance_valid(_shortRangeSensor):
 		_shortRangeSensor.queue_free()
 		_sensorFuelConsumption = 0.0
 	is_short_range_sensor_enabled = isEnable
 	
-
+# PATH
+# platform for refueling 
+var platform_global_position:= Vector2.ZERO
+# landing asteroids position
 var landing_global_position:= Vector2.ZERO
+# stationary orbit to catch asteroids position
+var orbit_global_position:= Vector2.ZERO
+# position to fly
 var target_global_position: = Vector2.ZERO
+# start position, usually needs to be equal platform position
 var initial_position: = Vector2.ZERO
+
 var _previous_global_position: = Vector2.ZERO
-# current acceleration
-var _acceleration_current: = 0.0
+
 # how many px droid already flied
 var _total_flying_distance: = 0.0
 
-# current random acceleration when player can risk to run plasma
-# but it can exlosure if the acceleration_current will be more than
-# critical
-var _acceleration_explosition: = 0.0
+
 var _velocity:= Vector2.ZERO
 
 onready var _sprite = $green
@@ -97,12 +115,15 @@ func _physics_process(delta: float) -> void:
 		_drop_droid()
 		return
 		
+	_check_and_return_to_refuel()
+	
 	if global_position.distance_to(target_global_position) < DISTANCE_THRESHOLD :
 		#		stopping droid
 		if not is_short_range_sensor_enabled:
 			self.is_short_range_sensor_enabled = true
 		_eat_idle_fuel()
 		return
+	
 	_velocity = Steering.follow(
 		_velocity,
 		global_position,
@@ -123,7 +144,7 @@ func _recalculate_distances()->void:
 	var dx: float = global_position.x - _previous_global_position.x
 	var dy: float = global_position.y - _previous_global_position.y
 	var distance: float = round(sqrt(dx*dx + dy*dy))
-	fuel_left -= distance
+	fuel_left -= distance * fuel_flying_consumption
 	_total_flying_distance += distance
 	_previous_global_position = global_position
 
@@ -164,9 +185,29 @@ func _on_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
 		
 func _eat_tractor_beam_fuel():
 	if is_tractor_beam_enabled:
-		if tractor_beam_object == null:
+		if not is_instance_valid(tractor_beam_object) or not is_instance_valid(_tractorBeam):
 			self.is_tractor_beam_enabled = false
+			self.tractor_beam_object = null
 		elif tractor_beam_object is Asteroid :
 			var object_mass: float = tractor_beam_object.get('mass')
 			fuel_left -= _tractorBeamFuelConsumption + _tractorBeam.calculate_fuel_consumtion_for_mass(object_mass)
 	
+func _check_and_return_to_refuel()->void:
+# if we have an asteroid catched we cannot return 
+# to base, as we need to land it first
+	if fuel_left <= 0:
+		return
+	elif not is_goto_platform_to_refuel_in_any_cases and is_instance_valid(tractor_beam_object):
+		return
+	elif target_global_position == platform_global_position:
+		return
+	
+#	calculate distance to platform and find out how many
+#	fuel it will take
+	var distanceToPlatform = global_position.distance_to(platform_global_position)
+	var expectedFuelConsumption = distanceToPlatform * fuel_flying_consumption
+	if fuel_left <= expectedFuelConsumption + fuel_reserve_limit:
+#		reroute to platform
+		self.is_tractor_beam_enabled = false
+		self.is_short_range_sensor_enabled = false
+		target_global_position = platform_global_position
