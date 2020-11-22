@@ -14,12 +14,17 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://objects/asteroid/Asteroid.gd"
 }, {
+"base": "KinematicBody2D",
+"class": "Droid",
+"language": "GDScript",
+"path": "res://objects/droids/Droid.gd"
+}, {
 "base": "Asteroid",
 "class": "IceWateredAsteroid",
 "language": "GDScript",
 "path": "res://objects/asteroid/ice_watered/IceWateredAsteroid.gd"
 }, {
-"base": "KinematicBody2D",
+"base": "Droid",
 "class": "PrimitiveDroid",
 "language": "GDScript",
 "path": "res://objects/droids/primitive/PrimitiveDroid.gd"
@@ -41,6 +46,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Asteroid": "",
+"Droid": "",
 "IceWateredAsteroid": "",
 "PrimitiveDroid": "",
 "ShortRangeSensor": "",

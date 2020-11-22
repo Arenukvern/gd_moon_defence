@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends Droid
 
 class_name PrimitiveDroid
 
@@ -18,14 +18,32 @@ var _acceleration_explosition: = 0.0
 # distance between target position and current position 
 # droid should stop
 export var DISTANCE_THRESHOLD: = 3.0
+export var DISTANCE_LANDING_THRESHOLD: = 100.0
 
-export var fuel_capacity: = 10000.0
-export var fuel_left: = 4000.0
-export var fuel_reserve_limit: = 300.0
+var is_droid_landed: bool = false setget , get_is_droid_landed
+
+func get_is_droid_landed()->bool:
+	return global_position.distance_to(landing_global_position) <= DISTANCE_LANDING_THRESHOLD
+var is_droid_in_platform: bool = false setget , get_is_droid_in_platform
+func get_is_droid_in_platform() -> bool:
+	return global_position.distance_to(platform_global_position) <= DISTANCE_THRESHOLD
+var is_droid_in_orbit: bool = false setget , get_is_droid_in_orbit
+func get_is_droid_in_orbit() -> bool:
+	return global_position.distance_to(orbit_global_position) <= DISTANCE_THRESHOLD
+var is_droid_going_to_refueling: bool = false setget , get_is_droid_going_to_refueling
+func get_is_droid_going_to_refueling() -> bool:
+	return target_global_position == platform_global_position
+var is_tractor_beam_has_object: bool = false setget , get_is_tractor_beam_has_object
+func get_is_tractor_beam_has_object()->bool:
+	return is_instance_valid(_tractorBeam) 
+export var fuel_capacity: = 7000.0
+export var fuel_left: = 7000.0
+export var fuel_reserve_limit: = 70.0
 export var is_drop_droid: = false
 # Fuel consumption when droid is not moving
 export var idle_fuel_consumption: = 1.0
 export var fuel_flying_consumption: = 2.0
+export var refueling_consumption: = 100.0
 export var debug_is_fuel_infinite: = false
 export var is_goto_platform_to_refuel_in_any_cases: = false
 onready var root: KinematicBody2D = $'.'
@@ -45,6 +63,7 @@ func set_is_tractor_beam_enabled(isEnable: bool)->void:
 	elif is_instance_valid(_tractorBeam):
 		_tractorBeam.queue_free()
 		_tractorBeamFuelConsumption = 0.0
+		tractor_beam_object = null
 		
 
 # TRACTOR BEAM OBJECT
@@ -91,11 +110,26 @@ var _previous_global_position: = Vector2.ZERO
 # how many px droid already flied
 var _total_flying_distance: = 0.0
 
-
 var _velocity:= Vector2.ZERO
 
 onready var _sprite = $green
 onready var _screen_dimension = OS.get_window_size()
+
+var _is_in_movement := false
+
+var is_all_equipment_enabled:bool = false setget set_is_all_equipment_enabled, get_is_all_equipment_enabled
+
+func set_is_all_equipment_enabled(isEnable: bool)->void:
+	is_all_equipment_enabled = isEnable
+	if isEnable:
+		self.is_short_range_sensor_enabled = true
+		self.is_tractor_beam_enabled = true
+	else:
+		self.is_short_range_sensor_enabled = false		
+		self.is_tractor_beam_enabled = false
+		
+func get_is_all_equipment_enabled()->bool:
+	return self.is_short_range_sensor_enabled || self.is_tractor_beam_enabled
 
 func _ready() -> void:
 	randomize()
@@ -110,19 +144,48 @@ func _physics_process(delta: float) -> void:
 	if _acceleration_current >= _acceleration_explosition: 
 		queue_free()
 #		TODO: make explosition
-	if not is_drop_droid && fuel_left <= 0 && not debug_is_fuel_infinite:
-		self.is_short_range_sensor_enabled = false
-		_drop_droid()
-		return
-		
-	_check_and_return_to_refuel()
+
+	_check_is_droid_in_target_position()
 	
-	if global_position.distance_to(target_global_position) < DISTANCE_THRESHOLD :
-		#		stopping droid
-		if not is_short_range_sensor_enabled:
-			self.is_short_range_sensor_enabled = true
-		_eat_idle_fuel()
-		return
+	if not is_drop_droid:
+		if fuel_left <= 0 && not debug_is_fuel_infinite:
+			_drop_droid()
+			return
+		elif self.is_droid_in_orbit:
+			if not self.is_short_range_sensor_enabled:
+				self.is_short_range_sensor_enabled = true
+			_eat_idle_fuel()
+			_check_and_return_to_refuel()
+		elif self.is_droid_landed:
+			self.is_all_equipment_enabled = false
+			_goto_orbit()
+			_eat_idle_fuel()
+			_check_and_return_to_refuel()
+		elif self.is_droid_in_platform:
+			_refuel_droid()
+		
+		_eat_tractor_beam_fuel()
+		
+		if fuel_left > 0 && is_tractor_beam_enabled:
+			_sync_tractor_beam_object_velocity()
+	
+	if _is_in_movement:
+
+		move_droid(delta)
+
+		if self.is_droid_going_to_refueling and self.is_all_equipment_enabled:
+			self.is_all_equipment_enabled = false
+	
+
+func _check_is_droid_in_target_position()->void:
+	if global_position.distance_to(target_global_position) <= DISTANCE_THRESHOLD:
+		_is_in_movement = false
+	else: 
+		_is_in_movement = true
+	
+func move_droid(delta: float)->void:
+	#	calculate distance to eat fuel
+	_recalculate_distances_and_eat_fuel()
 	
 	_velocity = Steering.follow(
 		_velocity,
@@ -132,15 +195,10 @@ func _physics_process(delta: float) -> void:
 	)
 	_velocity = move_and_slide(_velocity)
 	_sprite.rotation = _velocity.angle()
-	_eat_tractor_beam_fuel()
-#	calculate distance to eat fuel
-	_recalculate_distances()
-	if fuel_left > 0 && is_tractor_beam_enabled:
-		_sync_tractor_beam_object_velocity()	
 	
 # recalculates already made distance and distance left
 # before fuel will go out
-func _recalculate_distances()->void:
+func _recalculate_distances_and_eat_fuel()->void:
 	var dx: float = global_position.x - _previous_global_position.x
 	var dy: float = global_position.y - _previous_global_position.y
 	var distance: float = round(sqrt(dx*dx + dy*dy))
@@ -151,17 +209,15 @@ func _recalculate_distances()->void:
 
 # fall droid to the ground
 func _drop_droid()->void:
+	self.is_all_equipment_enabled = false
 	randomize()
 	target_global_position = Vector2(global_position.x, _screen_dimension.y)
 	_acceleration_current = acceleration_initial
-	self.is_tractor_beam_enabled = false
-	self.is_short_range_sensor_enabled = false
 	tractor_beam_object = null
 	is_drop_droid = true
 
 func _to_land_droid()->void:
 	target_global_position = landing_global_position
-	
 	
 func _eat_idle_fuel()-> void:
 	fuel_left -= idle_fuel_consumption
@@ -174,17 +230,15 @@ func _sync_tractor_beam_object_velocity()->void:
 		tractor_beam_object._velocity = _velocity
 
 func _on_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
-	self.is_tractor_beam_enabled = true
-	tractor_beam_object = collisionObject
-	if tractor_beam_object is Asteroid:
+	if collisionObject is Asteroid:
+		tractor_beam_object = collisionObject
+		self.is_tractor_beam_enabled = true
 		_to_land_droid()
 		tractor_beam_object.target_global_position = target_global_position
 		_tractorBeam.rotation = tractor_beam_object._velocity.angle()
-	else:
-		self.is_tractor_beam_enabled = false
 		
 func _eat_tractor_beam_fuel():
-	if is_tractor_beam_enabled:
+	if self.is_tractor_beam_enabled:
 		if not is_instance_valid(tractor_beam_object) or not is_instance_valid(_tractorBeam):
 			self.is_tractor_beam_enabled = false
 			self.tractor_beam_object = null
@@ -192,15 +246,17 @@ func _eat_tractor_beam_fuel():
 			var object_mass: float = tractor_beam_object.get('mass')
 			fuel_left -= _tractorBeamFuelConsumption + _tractorBeam.calculate_fuel_consumtion_for_mass(object_mass)
 	
-func _check_and_return_to_refuel()->void:
+func _check_and_return_to_refuel() -> void:
 # if we have an asteroid catched we cannot return 
 # to base, as we need to land it first
 	if fuel_left <= 0:
-		return
+		return 
 	elif not is_goto_platform_to_refuel_in_any_cases and is_instance_valid(tractor_beam_object):
-		return
-	elif target_global_position == platform_global_position:
-		return
+		return 
+	elif self.is_droid_going_to_refueling:
+		return 
+	elif self.is_droid_in_platform:
+		return 
 	
 #	calculate distance to platform and find out how many
 #	fuel it will take
@@ -208,6 +264,24 @@ func _check_and_return_to_refuel()->void:
 	var expectedFuelConsumption = distanceToPlatform * fuel_flying_consumption
 	if fuel_left <= expectedFuelConsumption + fuel_reserve_limit:
 #		reroute to platform
-		self.is_tractor_beam_enabled = false
-		self.is_short_range_sensor_enabled = false
+		self.is_all_equipment_enabled = false
 		target_global_position = platform_global_position
+		_acceleration_current = acceleration_initial
+
+		
+
+func _refuel_droid() -> void:
+	if fuel_left >= fuel_capacity:
+		fuel_left = fuel_capacity
+		_goto_orbit()
+	else:
+		fuel_left += refueling_consumption
+
+func _goto_orbit() -> void:
+	target_global_position = orbit_global_position
+	_acceleration_current = acceleration_initial
+
+
+
+func _on_PrimitiveDroid_body_entered(body: PhysicsBody2D) -> void:
+	pass # Replace with function body.
