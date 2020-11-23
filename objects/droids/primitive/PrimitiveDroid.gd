@@ -77,14 +77,14 @@ var tractor_beam_objects: Array = []
 
 # SENSOR SECTION
 export var is_short_range_sensor_enabled: = false setget set_is_short_range_sensor_enabled
-const ShortRangeSensor: = preload('res://objects/droids/primitive/ShortRangeSensor.tscn')
+const ShortRangeSensorScene: = preload('res://objects/droids/primitive/ShortRangeSensor.tscn')
 var _shortRangeSensor: ShortRangeSensor 
 var _sensorFuelConsumption: float = 0.0
 
 func set_is_short_range_sensor_enabled(isEnable: bool)->void:
 	is_short_range_sensor_enabled = isEnable
-	if isEnable and not is_short_range_sensor_enabled:
-		_shortRangeSensor = ShortRangeSensor.instance()
+	if isEnable and not is_instance_valid(_shortRangeSensor):
+		_shortRangeSensor = ShortRangeSensorScene.instance()
 		_shortRangeSensor.connect(
 			_shortRangeSensor.signal_name_enable_tractor_beam, 
 			self, 
@@ -92,7 +92,6 @@ func set_is_short_range_sensor_enabled(isEnable: bool)->void:
 		)
 		_sensorFuelConsumption = _shortRangeSensor.fuel_consumption
 		root.add_child(_shortRangeSensor)
-		return
 	elif is_instance_valid(_shortRangeSensor):
 		_shortRangeSensor.queue_free()
 		_sensorFuelConsumption = 0.0
@@ -114,7 +113,6 @@ func set_is_droid_selected(isSelect: bool)->void:
 export var are_all_waypoints_shown: bool = false setget set_are_all_waypoints_shown
 func set_are_all_waypoints_shown(isEnable: bool)->void:
 	are_all_waypoints_shown= isEnable
-	print(isEnable)
 	if isEnable:
 		for waypoint in self.waypoints_array:
 			var selection: Node = waypoint.waypoint_scene.instance()
@@ -325,8 +323,6 @@ func _check_and_return_to_refuel() -> void:
 		self.is_all_equipment_enabled = false
 		target_global_position = platform_global_position
 		_acceleration_current = acceleration_initial
-
-		
 
 func _refuel_droid() -> void:
 	if fuel_left >= fuel_capacity:
