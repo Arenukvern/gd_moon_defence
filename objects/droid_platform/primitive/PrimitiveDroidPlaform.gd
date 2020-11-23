@@ -6,23 +6,16 @@ func set_enabled(value):
 	enabled = value
 	spriteSelect.visible = value
 	
-func check_is_button_left_click(event: InputEvent)-> bool:
-	var isLeftClick = (event is InputEventMouseButton and event.button_index == BUTTON_LEFT)  or event is InputEventScreenTouch 
-	return isLeftClick && event.is_pressed()
-	
-func check_is_button_right_click(event: InputEvent)-> bool:
-	var isRightClick = (event is InputEventMouseButton and event.button_index == BUTTON_RIGHT) or event is InputEventScreenTouch 
-	return isRightClick && event.is_pressed()
-	
+
 func _input_event(viewport, event, shape_idx ) -> void:
-	if check_is_button_left_click(event):		
+	if InputHelper.isLeftClick(event):		
 		self.enabled = true
 	
 func _unhandled_input(event: InputEvent) -> void:
-	if enabled && check_is_button_left_click(event):
+	if enabled && InputHelper.isLeftClick(event):
 		_fire_droid()
 		return
-	if enabled && check_is_button_right_click(event):
+	if enabled && InputHelper.isRightClick(event):
 		 self.enabled = false
 
 

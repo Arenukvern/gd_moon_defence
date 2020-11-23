@@ -11,14 +11,9 @@ func set_is_spawn_enabled(isEnable:bool)->void:
 func _ready() -> void:
 	self.is_spawn_enabled = false
 
-
-func check_is_button_left_click(event: InputEvent)-> bool:
-	var isLeftClick = (event is InputEventMouseButton and event.button_index == BUTTON_LEFT)  or event is InputEventScreenTouch 
-	return isLeftClick and event.is_pressed()
-	
 func _unhandled_input(event: InputEvent) -> void:
 	if self.is_spawn_enabled:
-		var isLeftClick = check_is_button_left_click(event)
+		var isLeftClick = InputHelper.isLeftClick(event)
 		if isLeftClick:
 			AsteroidsState.add_asteroid(get_global_mouse_position())
 

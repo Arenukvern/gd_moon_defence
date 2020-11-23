@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://objects/asteroid/ice_watered/IceWateredAsteroid.gd"
 }, {
+"base": "Node",
+"class": "InputHelper",
+"language": "GDScript",
+"path": "res://helpers/InputHelper.gd"
+}, {
 "base": "Droid",
 "class": "PrimitiveDroid",
 "language": "GDScript",
@@ -64,6 +69,7 @@ _global_script_class_icons={
 "Droid": "",
 "DroidSelection": "",
 "IceWateredAsteroid": "",
+"InputHelper": "",
 "PrimitiveDroid": "",
 "ShortRangeSensor": "",
 "TractorBeam": "",
@@ -93,6 +99,7 @@ DroidsState="*res://autoload/states/DroidsState.gd"
 2d_physics/layer_3="people"
 2d_physics/layer_4="buildings"
 2d_physics/layer_5="ground"
+2d_physics/layer_6="waypoints"
 
 [rendering]
 

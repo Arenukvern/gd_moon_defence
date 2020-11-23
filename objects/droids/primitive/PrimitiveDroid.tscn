@@ -7,13 +7,15 @@
 radius = 7.07107
 
 [node name="PrimitiveDroid" type="KinematicBody2D"]
+input_pickable = true
 script = ExtResource( 1 )
-
-[node name="green" type="Sprite" parent="."]
-position = Vector2( 0, -32 )
-texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -31 )
 shape = SubResource( 1 )
 
+[node name="green" type="Sprite" parent="."]
+position = Vector2( 0, -32 )
+texture = ExtResource( 2 )
+
+[connection signal="input_event" from="." to="." method="_on_PrimitiveDroid_input_event"]

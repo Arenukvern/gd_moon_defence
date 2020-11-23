@@ -24,18 +24,23 @@ var is_droid_landed: bool = false setget , get_is_droid_landed
 
 func get_is_droid_landed()->bool:
 	return global_position.distance_to(landing_global_position) <= DISTANCE_LANDING_THRESHOLD
+	
 var is_droid_in_platform: bool = false setget , get_is_droid_in_platform
 func get_is_droid_in_platform() -> bool:
 	return global_position.distance_to(platform_global_position) <= DISTANCE_THRESHOLD
+	
 var is_droid_in_orbit: bool = false setget , get_is_droid_in_orbit
 func get_is_droid_in_orbit() -> bool:
 	return global_position.distance_to(orbit_global_position) <= DISTANCE_THRESHOLD
+	
 var is_droid_going_to_refueling: bool = false setget , get_is_droid_going_to_refueling
 func get_is_droid_going_to_refueling() -> bool:
 	return target_global_position == platform_global_position
+	
 var is_tractor_beam_has_objects: bool = false setget , get_is_tractor_beam_has_objects
 func get_is_tractor_beam_has_objects()->bool:
 	return tractor_beam_objects.size() > 0
+	
 export var fuel_capacity: = 7000.0
 export var fuel_left: = 7000.0
 export var fuel_reserve_limit: = 70.0
@@ -66,7 +71,6 @@ func set_is_tractor_beam_enabled(isEnable: bool)->void:
 		_tractorBeam.queue_free()
 		_tractorBeamFuelConsumption = 0.0
 		tractor_beam_objects.clear()
-
 
 # TRACTOR BEAM OBJECT
 var tractor_beam_objects: Array = []
@@ -102,17 +106,21 @@ func set_is_droid_selected(isSelect: bool)->void:
 	if isSelect:
 		_droid_selection = DroidSelectionScene.instance()
 		root.add_child(_droid_selection)
-	elif is_instance_valid(_droid_selection): 
+		self.are_all_waypoints_shown = true
+	elif is_instance_valid(_droid_selection) and _droid_selection != null: 
+		self.are_all_waypoints_shown = false
 		_droid_selection.queue_free()
 
 export var are_all_waypoints_shown: bool = false setget set_are_all_waypoints_shown
 func set_are_all_waypoints_shown(isEnable: bool)->void:
 	are_all_waypoints_shown= isEnable
+	print(isEnable)
 	if isEnable:
-		for waypoint in waypoints_array:
+		for waypoint in self.waypoints_array:
 			var selection: Node = waypoint.waypoint_scene.instance()
 			selection.global_position = waypoint.global_position
-			_waypoints_selections_array.append(selection)
+			$"/root/".add_child(selection)
+			_waypoints_selections_array.push_back(selection)
 	else :
 		for selection in _waypoints_selections_array:
 			if is_instance_valid(selection):
@@ -130,11 +138,11 @@ onready var landingWaypoint = WaypointGd.new()
 var waypoints_array: Array = [] setget ,get_waypoints_array
 func get_waypoints_array()-> Array:
 	platformWaypoint.global_position = platform_global_position
-	platformWaypoint.waypoint.waypoint_scene = WaypointFactory.purple
+	platformWaypoint.waypoint_scene = WaypointFactory.purple
 	orbitWaypoint.global_position = orbit_global_position
-	orbitWaypoint.waypoint.waypoint_scene = WaypointFactory.red
+	orbitWaypoint.waypoint_scene = WaypointFactory.red
 	landingWaypoint.global_position = landing_global_position
-	landingWaypoint.waypoint.waypoint_scene = WaypointFactory.yellow
+	landingWaypoint.waypoint_scene = WaypointFactory.yellow
 	return [platformWaypoint, orbitWaypoint, landingWaypoint]
 
 # PATH
@@ -332,6 +340,7 @@ func _goto_orbit() -> void:
 	_acceleration_current = acceleration_initial
 
 
-
-func _on_PrimitiveDroid_body_entered(body: PhysicsBody2D) -> void:
-	pass # Replace with function body.
+func _on_PrimitiveDroid_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+	var isLeftClick = InputHelper.isLeftClick(event)
+	if isLeftClick:
+		self.is_droid_selected = not self.is_droid_selected
