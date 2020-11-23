@@ -5,7 +5,7 @@ export var enabled = false setget set_enabled
 func set_enabled(value):
 	enabled = value
 	spriteSelect.visible = value
-	
+
 func _unhandled_input(event: InputEvent) -> void:
 	if enabled:
 		if (not isMouseOver) && InputHelper.isLeftClick(event) :

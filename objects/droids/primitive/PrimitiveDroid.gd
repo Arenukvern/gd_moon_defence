@@ -106,24 +106,69 @@ func set_is_droid_selected(isSelect: bool)->void:
 		_droid_selection = DroidSelectionScene.instance()
 		root.add_child(_droid_selection)
 		self.are_all_waypoints_shown = true
+		UIState.isWaypointsManagerOpen = true
+#		connect signals to catch all waypoint position changes
+		if is_instance_valid(UIState.waypointManager) and (UIState.waypointManager is WaypointsManager):
+			_connect_waypoints_manager()
+		else :
+			UIState.isWaypointsManagerOpen = true
+			_connect_waypoints_manager()
 	elif is_instance_valid(_droid_selection) and _droid_selection != null: 
 		self.are_all_waypoints_shown = false
 		_droid_selection.queue_free()
+		UIState.isWaypointsManagerOpen = false
+
+func _connect_waypoints_manager()->void:
+	UIState.waypointManager.connect(
+		UIState.waypointManager.signal_name_waypoint_selected,
+		self,
+		UIState.waypointManager.signal_func_name_waypoint_selected
+	)
+	UIState.waypointManager.connect(
+		UIState.waypointManager.signal_name_close_waypoints_selection,
+		self,
+		UIState.waypointManager.signal_func_name_close_waypoints_selection
+	)
+
+func _on_close_waypoints_selection()->void:
+	self.is_droid_selected = false
+
+func _on_waypoint_selected(arg)->void:
+	var waypointPosition: Vector2 = arg.position
+	var waypointPositionType: int = arg.position_type
+	match waypointPositionType:
+		WaypointFactory.PositionType.ORBIT:
+			if self.is_droid_in_orbit:
+				target_global_position = waypointPosition
+			orbit_global_position = waypointPosition
+		WaypointFactory.PositionType.PLATFORM:
+			if self.is_droid_in_platform:
+				target_global_position = waypointPosition
+			platform_global_position = waypointPosition
+		WaypointFactory.PositionType.LANDING:
+			if self.is_droid_landed:
+				target_global_position = waypointPosition
+			landing_global_position = waypointPosition
+#	rebuild ui waypoints
+	self.are_all_waypoints_shown = true
+	
 
 export var are_all_waypoints_shown: bool = false setget set_are_all_waypoints_shown
 func set_are_all_waypoints_shown(isEnable: bool)->void:
 	are_all_waypoints_shown= isEnable
+	clear_all_waypoints()
 	if isEnable:
 		for waypoint in self.waypoints_array:
 			var selection: Node = waypoint.waypoint_scene.instance()
 			selection.global_position = waypoint.global_position
 			$"/root/".add_child(selection)
 			_waypoints_selections_array.push_back(selection)
-	else :
-		for selection in _waypoints_selections_array:
-			if is_instance_valid(selection):
-				selection.queue_free()
-		_waypoints_selections_array.clear()
+
+func clear_all_waypoints():
+	for selection in _waypoints_selections_array:
+		if is_instance_valid(selection):
+			selection.queue_free()
+	_waypoints_selections_array.clear()
 
 var _waypoints_selections_array: Array = []
 
@@ -335,8 +380,17 @@ func _goto_orbit() -> void:
 	target_global_position = orbit_global_position
 	_acceleration_current = acceleration_initial
 
+var is_mouse_hovered: bool = false
 
 func _on_PrimitiveDroid_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	var isLeftClick = InputHelper.isLeftClick(event)
-	if isLeftClick:
+	if isLeftClick and is_mouse_hovered:
 		self.is_droid_selected = not self.is_droid_selected
+
+
+func _on_PrimitiveDroid_mouse_entered() -> void:
+	is_mouse_hovered = true
+
+
+func _on_PrimitiveDroid_mouse_exited() -> void:
+	is_mouse_hovered = false
