@@ -78,9 +78,8 @@ var _shortRangeSensor: ShortRangeSensor
 var _sensorFuelConsumption: float = 0.0
 
 func set_is_short_range_sensor_enabled(isEnable: bool)->void:
-
+	is_short_range_sensor_enabled = isEnable
 	if isEnable and not is_short_range_sensor_enabled:
-		is_short_range_sensor_enabled = isEnable
 		_shortRangeSensor = ShortRangeSensor.instance()
 		_shortRangeSensor.connect(
 			_shortRangeSensor.signal_name_enable_tractor_beam, 
@@ -93,8 +92,51 @@ func set_is_short_range_sensor_enabled(isEnable: bool)->void:
 	elif is_instance_valid(_shortRangeSensor):
 		_shortRangeSensor.queue_free()
 		_sensorFuelConsumption = 0.0
-	is_short_range_sensor_enabled = isEnable
-	
+
+# SELECTIONS 
+const DroidSelectionScene: = preload('res://objects/droids/primitive/DroidSelection.tscn')
+export var is_droid_selected: bool = false setget set_is_droid_selected
+var _droid_selection: DroidSelection 
+func set_is_droid_selected(isSelect: bool)->void:
+	is_droid_selected = isSelect
+	if isSelect:
+		_droid_selection = DroidSelectionScene.instance()
+		root.add_child(_droid_selection)
+	elif is_instance_valid(_droid_selection): 
+		_droid_selection.queue_free()
+
+export var are_all_waypoints_shown: bool = false setget set_are_all_waypoints_shown
+func set_are_all_waypoints_shown(isEnable: bool)->void:
+	are_all_waypoints_shown= isEnable
+	if isEnable:
+		for waypoint in waypoints_array:
+			var selection: Node = waypoint.waypoint_scene.instance()
+			selection.global_position = waypoint.global_position
+			_waypoints_selections_array.append(selection)
+	else :
+		for selection in _waypoints_selections_array:
+			if is_instance_valid(selection):
+				selection.queue_free()
+		_waypoints_selections_array.clear()
+
+var _waypoints_selections_array: Array = []
+
+const WaypointGd: = preload('res://objects/droids/Waypoint.gd') 
+onready var WaypointFactory: WaypointFactory = preload('res://objects/droids/WaypointFactory.gd').new() # Relative path
+onready var platformWaypoint = WaypointGd.new()
+onready var orbitWaypoint = WaypointGd.new()
+onready var landingWaypoint = WaypointGd.new()
+
+var waypoints_array: Array = [] setget ,get_waypoints_array
+func get_waypoints_array()-> Array:
+	platformWaypoint.global_position = platform_global_position
+	platformWaypoint.waypoint.waypoint_scene = WaypointFactory.purple
+	orbitWaypoint.global_position = orbit_global_position
+	orbitWaypoint.waypoint.waypoint_scene = WaypointFactory.red
+	landingWaypoint.global_position = landing_global_position
+	landingWaypoint.waypoint.waypoint_scene = WaypointFactory.yellow
+	return [platformWaypoint, orbitWaypoint, landingWaypoint]
+
 # PATH
 # platform for refueling 
 var platform_global_position:= Vector2.ZERO
