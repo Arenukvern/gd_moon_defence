@@ -22,7 +22,6 @@ func define_target_position()-> void:
 		randomize()
 		var target_x_position: = rand_range( 1,  _screen_dimension.x)
 		target_global_position = Vector2(target_x_position,_screen_dimension.y) 
-		
 
 func _physics_process(delta: float) -> void:
 	if global_position.distance_to(target_global_position) < DISTANCE_THRESHOLD :

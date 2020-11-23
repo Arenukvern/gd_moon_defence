@@ -41,9 +41,9 @@ var is_tractor_beam_has_objects: bool = false setget , get_is_tractor_beam_has_o
 func get_is_tractor_beam_has_objects()->bool:
 	return tractor_beam_objects.size() > 0
 	
-export var fuel_capacity: = 7000.0
-export var fuel_left: = 7000.0
-export var fuel_reserve_limit: = 70.0
+export var fuel_capacity: = 15000.0
+export var fuel_left: = 2000.0
+export var fuel_reserve_limit: = 700.0
 export var is_drop_droid: = false
 
 # Fuel consumption when droid is not moving
@@ -110,12 +110,10 @@ func set_is_droid_selected(isSelect: bool)->void:
 #		connect signals to catch all waypoint position changes
 		if is_instance_valid(UIState.waypointManager) and (UIState.waypointManager is WaypointsManager):
 			_connect_waypoints_manager()
-		else :
-			UIState.isWaypointsManagerOpen = true
-			_connect_waypoints_manager()
+
 	elif is_instance_valid(_droid_selection) and _droid_selection != null: 
-		self.are_all_waypoints_shown = false
 		_droid_selection.queue_free()
+		self.are_all_waypoints_shown = false
 		UIState.isWaypointsManagerOpen = false
 
 func _connect_waypoints_manager()->void:
@@ -386,8 +384,13 @@ func _on_PrimitiveDroid_input_event(viewport: Node, event: InputEvent, shape_idx
 	var isLeftClick = InputHelper.isLeftClick(event)
 	if isLeftClick and is_mouse_hovered:
 		self.is_droid_selected = not self.is_droid_selected
+		return
 
-
+func _input(event: InputEvent) -> void:
+	var isRightClick = InputHelper.isRightClick(event)
+	if isRightClick:
+		self.is_droid_selected = false
+		
 func _on_PrimitiveDroid_mouse_entered() -> void:
 	is_mouse_hovered = true
 

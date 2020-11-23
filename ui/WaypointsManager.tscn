@@ -21,6 +21,7 @@ alignment = 1
 margin_top = 4.0
 margin_right = 171.0
 margin_bottom = 24.0
+text = "Close"
 
 [node name="Orbit" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 margin_top = 28.0
