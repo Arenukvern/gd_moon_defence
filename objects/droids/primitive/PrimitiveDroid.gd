@@ -33,13 +33,14 @@ func get_is_droid_in_orbit() -> bool:
 var is_droid_going_to_refueling: bool = false setget , get_is_droid_going_to_refueling
 func get_is_droid_going_to_refueling() -> bool:
 	return target_global_position == platform_global_position
-var is_tractor_beam_has_object: bool = false setget , get_is_tractor_beam_has_object
-func get_is_tractor_beam_has_object()->bool:
-	return is_instance_valid(_tractorBeam) 
+var is_tractor_beam_has_objects: bool = false setget , get_is_tractor_beam_has_objects
+func get_is_tractor_beam_has_objects()->bool:
+	return tractor_beam_objects.size() > 0
 export var fuel_capacity: = 7000.0
 export var fuel_left: = 7000.0
 export var fuel_reserve_limit: = 70.0
 export var is_drop_droid: = false
+
 # Fuel consumption when droid is not moving
 export var idle_fuel_consumption: = 1.0
 export var fuel_flying_consumption: = 2.0
@@ -50,24 +51,25 @@ onready var root: KinematicBody2D = $'.'
 
 # TRACTOR BEAM SECTION
 export var is_tractor_beam_enabled:= false setget set_is_tractor_beam_enabled
-const TractorBeam: = preload('res://objects/droids/primitive/TractorBeam.tscn')
+const TractorBeamScene: = preload('res://objects/droids/primitive/TractorBeam.tscn')
 var _tractorBeam: TractorBeam
 var _tractorBeamFuelConsumption: float = 0.0
+
 func set_is_tractor_beam_enabled(isEnable: bool)->void:
 	is_tractor_beam_enabled = isEnable
 	if isEnable and not is_instance_valid(_tractorBeam):
 		_acceleration_current = acceleration_for_landing
-		_tractorBeam = TractorBeam.instance()
+		_tractorBeam = TractorBeamScene.instance()
 		_tractorBeamFuelConsumption = _tractorBeam.fuel_consumption
 		root.call_deferred("add_child",_tractorBeam)
 	elif is_instance_valid(_tractorBeam):
 		_tractorBeam.queue_free()
 		_tractorBeamFuelConsumption = 0.0
-		tractor_beam_object = null
-		
+		tractor_beam_objects.clear()
+
 
 # TRACTOR BEAM OBJECT
-var tractor_beam_object: PhysicsBody2D
+var tractor_beam_objects: Array = []
 
 # SENSOR SECTION
 export var is_short_range_sensor_enabled: = false setget set_is_short_range_sensor_enabled
@@ -213,7 +215,7 @@ func _drop_droid()->void:
 	randomize()
 	target_global_position = Vector2(global_position.x, _screen_dimension.y)
 	_acceleration_current = acceleration_initial
-	tractor_beam_object = null
+	tractor_beam_objects.clear()
 	is_drop_droid = true
 
 func _to_land_droid()->void:
@@ -225,33 +227,39 @@ func _eat_idle_fuel()-> void:
 		fuel_left -= _sensorFuelConsumption
 
 func _sync_tractor_beam_object_velocity()->void:
-	if tractor_beam_object is Asteroid:
-		tractor_beam_object.max_speed = _acceleration_current
-		tractor_beam_object._velocity = _velocity
+	for tractorObject in tractor_beam_objects:
+		if tractorObject is Asteroid:
+			tractorObject.max_speed = _acceleration_current
+			tractorObject._velocity = _velocity
 
 func _on_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
-	if collisionObject is Asteroid:
-		tractor_beam_object = collisionObject
+	if collisionObject is Asteroid and is_instance_valid(collisionObject):
 		self.is_tractor_beam_enabled = true
+		collisionObject.target_global_position = landing_global_position
+		tractor_beam_objects.push_back(collisionObject)
+		_tractorBeam.rotation = collisionObject._velocity.angle()
 		_to_land_droid()
-		tractor_beam_object.target_global_position = target_global_position
-		_tractorBeam.rotation = tractor_beam_object._velocity.angle()
-		
+
 func _eat_tractor_beam_fuel():
+
 	if self.is_tractor_beam_enabled:
-		if not is_instance_valid(tractor_beam_object) or not is_instance_valid(_tractorBeam):
+		var totalAseroidMass := 0.0
+		if tractor_beam_objects.size() <= 0:
 			self.is_tractor_beam_enabled = false
-			self.tractor_beam_object = null
-		elif tractor_beam_object is Asteroid :
-			var object_mass: float = tractor_beam_object.get('mass')
-			fuel_left -= _tractorBeamFuelConsumption + _tractorBeam.calculate_fuel_consumtion_for_mass(object_mass)
+			return
+		for tractorObject in tractor_beam_objects:
+			if tractorObject is Asteroid:
+				var asteroidMass: float = tractorObject.get('mass')
+				totalAseroidMass += asteroidMass
+
+		fuel_left -= _tractorBeamFuelConsumption + TractorBeam.calculate_fuel_consumtion_for_mass(totalAseroidMass)
 	
 func _check_and_return_to_refuel() -> void:
 # if we have an asteroid catched we cannot return 
 # to base, as we need to land it first
 	if fuel_left <= 0:
 		return 
-	elif not is_goto_platform_to_refuel_in_any_cases and is_instance_valid(tractor_beam_object):
+	elif not is_goto_platform_to_refuel_in_any_cases and self.is_tractor_beam_has_objects:
 		return 
 	elif self.is_droid_going_to_refueling:
 		return 
