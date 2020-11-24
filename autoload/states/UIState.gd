@@ -20,7 +20,11 @@ var isWaypointsManagerOpen: bool = false setget set_isWaypointsManagerOpen
 
 func set_isWaypointsManagerOpen(isEnable: bool)->void:
 	isWaypointsManagerOpen = isEnable
-	if isEnable and not is_instance_valid(waypointManager):
+	if isEnable :
+		if is_instance_valid(waypointManager) and waypointManager is WaypointsManager:
+			waypointManager.closeSelected()
+			waypointManager.queue_free()
+			
 		waypointManager = WaypointsManagerScene.instance()
 		waypointManager.connect(
 			waypointManager.signal_name_close_waypoints_selection,

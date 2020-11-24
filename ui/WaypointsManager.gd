@@ -55,7 +55,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 func send_new_waypoint_position()->void:
 	if not is_mouse_hovered:
-		print('emit position', get_global_mouse_position())
 		emit_signal(
 			signal_name_waypoint_selected, 
 			{ 'position': get_global_mouse_position(), 'position_type': selectedPositionType }
@@ -68,8 +67,10 @@ func _on_WaypointsManager_mouse_entered() -> void:
 	is_mouse_hovered = true
 
 func _on_WaypointsManager_mouse_exited() -> void:
-	print('exited')
 	is_mouse_hovered = false
 
 func _on_CloseBtn_button_up() -> void:
+	closeSelected()
+
+func closeSelected()->void:
 	emit_signal(signal_name_close_waypoints_selection)

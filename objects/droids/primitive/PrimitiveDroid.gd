@@ -19,6 +19,7 @@ var _acceleration_explosition: = 0.0
 # droid should stop
 export var DISTANCE_THRESHOLD: = 3.0
 export var DISTANCE_LANDING_THRESHOLD: = 100.0
+export var DISTANCE_PLATFORM_THRESHOLD: = 50.0
 
 var is_droid_landed: bool = false setget , get_is_droid_landed
 
@@ -27,7 +28,7 @@ func get_is_droid_landed()->bool:
 	
 var is_droid_in_platform: bool = false setget , get_is_droid_in_platform
 func get_is_droid_in_platform() -> bool:
-	return global_position.distance_to(platform_global_position) <= DISTANCE_THRESHOLD
+	return global_position.distance_to(platform_global_position) <= DISTANCE_PLATFORM_THRESHOLD
 	
 var is_droid_in_orbit: bool = false setget , get_is_droid_in_orbit
 func get_is_droid_in_orbit() -> bool:
@@ -134,6 +135,9 @@ func _on_close_waypoints_selection()->void:
 func _on_waypoint_selected(arg)->void:
 	var waypointPosition: Vector2 = arg.position
 	var waypointPositionType: int = arg.position_type
+	if _is_in_movement and not self.is_droid_going_to_refueling and not self.is_tractor_beam_has_objects:
+		target_global_position = waypointPosition
+	
 	match waypointPositionType:
 		WaypointFactory.PositionType.ORBIT:
 			if self.is_droid_in_orbit:
@@ -264,7 +268,7 @@ func _physics_process(delta: float) -> void:
 	
 	if _is_in_movement:
 
-		move_droid(delta)
+		move_droid()
 
 		if self.is_droid_going_to_refueling and self.is_all_equipment_enabled:
 			self.is_all_equipment_enabled = false
@@ -276,7 +280,7 @@ func _check_is_droid_in_target_position()->void:
 	else: 
 		_is_in_movement = true
 	
-func move_droid(delta: float)->void:
+func move_droid()->void:
 	#	calculate distance to eat fuel
 	_recalculate_distances_and_eat_fuel()
 	

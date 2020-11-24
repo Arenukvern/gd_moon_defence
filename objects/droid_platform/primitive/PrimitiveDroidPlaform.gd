@@ -1,4 +1,4 @@
-extends Area2D
+extends KinematicBody2D
 
 onready var spriteSelect: = $ui_select
 export var enabled = false setget set_enabled
