@@ -3,7 +3,8 @@ extends Droid
 class_name PrimitiveDroid
 
 export var health_max: = 200.0
-export var damage_points: = 100.0
+
+onready var projectRoot := $"/root/"
 
 export var acceleration_for_landing: = 20.0
 export var acceleration_initial: = 100.0
@@ -17,8 +18,8 @@ var _acceleration_current: = 0.0
 var _acceleration_explosition: = 0.0
 # distance between target position and current position 
 # droid should stop
-export var DISTANCE_THRESHOLD: = 3.0
-export var DISTANCE_LANDING_THRESHOLD: = 100.0
+
+export var DISTANCE_LANDING_THRESHOLD: = 50.0
 export var DISTANCE_PLATFORM_THRESHOLD: = 50.0
 
 var is_droid_landed: bool = false setget , get_is_droid_landed
@@ -42,8 +43,7 @@ var is_tractor_beam_has_objects: bool = false setget , get_is_tractor_beam_has_o
 func get_is_tractor_beam_has_objects()->bool:
 	return tractor_beam_objects.size() > 0
 	
-export var fuel_capacity: = 15000.0
-export var fuel_left: = 2000.0
+
 export var fuel_reserve_limit: = 700.0
 export var is_drop_droid: = false
 
@@ -135,7 +135,7 @@ func _on_close_waypoints_selection()->void:
 func _on_waypoint_selected(arg)->void:
 	var waypointPosition: Vector2 = arg.position
 	var waypointPositionType: int = arg.position_type
-	if _is_in_movement and not self.is_droid_going_to_refueling and not self.is_tractor_beam_has_objects:
+	if self.is_in_movement and not self.is_droid_going_to_refueling and not self.is_tractor_beam_has_objects:
 		target_global_position = waypointPosition
 	
 	match waypointPositionType:
@@ -163,7 +163,7 @@ func set_are_all_waypoints_shown(isEnable: bool)->void:
 		for waypoint in self.waypoints_array:
 			var selection: Node = waypoint.waypoint_scene.instance()
 			selection.global_position = waypoint.global_position
-			$"/root/".add_child(selection)
+			projectRoot.add_child(selection)
 			_waypoints_selections_array.push_back(selection)
 
 func clear_all_waypoints():
@@ -198,9 +198,6 @@ var landing_global_position:= Vector2.ZERO
 # stationary orbit to catch asteroids position
 var orbit_global_position:= Vector2.ZERO
 # position to fly
-var target_global_position: = Vector2.ZERO
-# start position, usually needs to be equal platform position
-var initial_position: = Vector2.ZERO
 
 var _previous_global_position: = Vector2.ZERO
 
@@ -212,7 +209,6 @@ var _velocity:= Vector2.ZERO
 onready var _sprite = $green
 onready var _screen_dimension = OS.get_window_size()
 
-var _is_in_movement := false
 
 var is_all_equipment_enabled:bool = false setget set_is_all_equipment_enabled, get_is_all_equipment_enabled
 
@@ -241,8 +237,6 @@ func _physics_process(delta: float) -> void:
 	if _acceleration_current >= _acceleration_explosition: 
 		queue_free()
 #		TODO: make explosition
-
-	_check_is_droid_in_target_position()
 	
 	if not is_drop_droid:
 		if fuel_left <= 0 && not debug_is_fuel_infinite:
@@ -266,19 +260,13 @@ func _physics_process(delta: float) -> void:
 		if fuel_left > 0 && is_tractor_beam_enabled:
 			_sync_tractor_beam_object_velocity()
 	
-	if _is_in_movement:
+	if self.is_in_movement:
 
 		move_droid()
 
 		if self.is_droid_going_to_refueling and self.is_all_equipment_enabled:
 			self.is_all_equipment_enabled = false
 	
-
-func _check_is_droid_in_target_position()->void:
-	if global_position.distance_to(target_global_position) <= DISTANCE_THRESHOLD:
-		_is_in_movement = false
-	else: 
-		_is_in_movement = true
 	
 func move_droid()->void:
 	#	calculate distance to eat fuel
