@@ -185,6 +185,7 @@ func _on_rover_actions_load()->void:
 	
 func _on_rover_actions_to_base()->void:
 	target_global_position = platform_global_position
+	self.are_all_waypoints_shown = true
 	
 func _refuel_droid() -> void:
 	if fuel_left == fuel_capacity: return
