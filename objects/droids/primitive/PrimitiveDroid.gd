@@ -104,7 +104,7 @@ func set_is_droid_selected(isSelect: bool)->void:
 		if is_instance_valid(UIState.waypointManager) and (UIState.waypointManager is WaypointsManager):
 			_connect_waypoints_manager()
 
-	elif is_instance_valid(_droid_selection) and _droid_selection != null: 
+	elif is_instance_valid(_droid_selection) and _droid_selection is DroidSelection: 
 		_droid_selection.queue_free()
 		self.are_all_waypoints_shown = false
 		UIState.isWaypointsManagerOpen = false
