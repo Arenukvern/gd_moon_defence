@@ -3,6 +3,8 @@ extends KinematicBody2D
 export var glassHealth: = 4000.0
 export var metalHealth: = 4000.0
 
+var debug_is_selection_disabled: bool = true
+
 func add_damage(massDistancePoints: int):
 	metalHealth -= massDistancePoints/2
 	glassHealth -= massDistancePoints/2
@@ -24,6 +26,7 @@ func set_is_module_selected(isSelect: bool)->void:
 		_module_selection.queue_free()
 
 func _on_BaseModule_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+	if debug_is_selection_disabled: return
 	var isLeftClick = InputHelper.isLeftClick(event)
 	if isLeftClick:
 		self.is_module_selected = not self.is_module_selected

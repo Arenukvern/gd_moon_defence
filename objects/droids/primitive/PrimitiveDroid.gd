@@ -2,10 +2,6 @@ extends Droid
 
 class_name PrimitiveDroid
 
-export var health_max: = 200.0
-
-onready var projectRoot := $"/root/"
-
 export var acceleration_for_landing: = 20.0
 export var acceleration_initial: = 100.0
 export var acceleration_explosive_min: = 300.0
@@ -20,17 +16,13 @@ var _acceleration_explosition: = 0.0
 # droid should stop
 
 export var DISTANCE_LANDING_THRESHOLD: = 50.0
-export var DISTANCE_PLATFORM_THRESHOLD: = 50.0
 
 var is_droid_landed: bool = false setget , get_is_droid_landed
 
 func get_is_droid_landed()->bool:
 	return global_position.distance_to(landing_global_position) <= DISTANCE_LANDING_THRESHOLD
 	
-var is_droid_in_platform: bool = false setget , get_is_droid_in_platform
-func get_is_droid_in_platform() -> bool:
-	return global_position.distance_to(platform_global_position) <= DISTANCE_PLATFORM_THRESHOLD
-	
+
 var is_droid_in_orbit: bool = false setget , get_is_droid_in_orbit
 func get_is_droid_in_orbit() -> bool:
 	return global_position.distance_to(orbit_global_position) <= DISTANCE_THRESHOLD
@@ -50,8 +42,8 @@ export var is_drop_droid: = false
 # Fuel consumption when droid is not moving
 export var idle_fuel_consumption: = 1.0
 export var fuel_flying_consumption: = 2.0
-export var refueling_consumption: = 100.0
-export var debug_is_fuel_infinite: = false
+
+
 export var is_goto_platform_to_refuel_in_any_cases: = false
 onready var root: KinematicBody2D = $'.'
 
@@ -174,9 +166,8 @@ func clear_all_waypoints():
 
 var _waypoints_selections_array: Array = []
 
-const WaypointGd: = preload('res://objects/droids/Waypoint.gd') 
-onready var WaypointFactory: WaypointFactory = preload('res://objects/droids/WaypointFactory.gd').new() # Relative path
-onready var platformWaypoint = WaypointGd.new()
+
+
 onready var orbitWaypoint = WaypointGd.new()
 onready var landingWaypoint = WaypointGd.new()
 
@@ -191,20 +182,19 @@ func get_waypoints_array()-> Array:
 	return [platformWaypoint, orbitWaypoint, landingWaypoint]
 
 # PATH
-# platform for refueling 
-var platform_global_position:= Vector2.ZERO
+
 # landing asteroids position
 var landing_global_position:= Vector2.ZERO
 # stationary orbit to catch asteroids position
 var orbit_global_position:= Vector2.ZERO
 # position to fly
 
-var _previous_global_position: = Vector2.ZERO
+
 
 # how many px droid already flied
 var _total_flying_distance: = 0.0
 
-var _velocity:= Vector2.ZERO
+
 
 onready var _sprite = $green
 onready var _screen_dimension = OS.get_window_size()
