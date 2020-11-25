@@ -15,9 +15,10 @@ __meta__ = {
 layer = 100
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-editor/display_folded = true
 
 [node name="UIDebug" parent="CanvasLayer" instance=ExtResource( 1 )]
+margin_left = 787.0
+margin_bottom = -512.0
 
 [node name="BaseModule" parent="." instance=ExtResource( 2 )]
 position = Vector2( 523, 480 )
