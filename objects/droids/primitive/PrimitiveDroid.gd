@@ -216,12 +216,14 @@ func get_is_all_equipment_enabled()->bool:
 
 func _ready() -> void:
 	randomize()
+	mass_kg = 10
 	_acceleration_explosition = rand_range(acceleration_explosive_min, acceleration_explosive_max)
 	landing_global_position =  Vector2(rand_range(10, _screen_dimension.x),_screen_dimension.y)
 	global_position = initial_position
 	_previous_global_position = initial_position
 	_acceleration_current = acceleration_initial
-	
+	_init_healthComponents()
+
 
 func _physics_process(delta: float) -> void:
 	if _acceleration_current >= _acceleration_explosition: 

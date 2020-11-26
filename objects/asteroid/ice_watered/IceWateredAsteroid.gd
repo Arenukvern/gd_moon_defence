@@ -5,7 +5,6 @@ class_name IceWateredAsteroid
 export var debug_target_position: = Vector2.ZERO
 
 func _ready() -> void:
-	_health_current = health_max
 	randomize()
 	var start_distance_surface_edge = rand_range( 1, AsteroidsState.asteroidStartMaxDistance)
 	randomize()
@@ -14,6 +13,9 @@ func _ready() -> void:
 	define_target_position()
 	randomize()
 	mass = rand_range( 1,  mass_max)
+	
+	var iceResource:= BaseResourceFactory.getWaterIce(mass)
+	health_damage_system.initSystem( [ iceResource ] )
 
 func define_target_position()-> void:
 	if debug_target_position != Vector2.ZERO :
@@ -37,9 +39,3 @@ func _physics_process(delta: float) -> void:
 	_sprite.rotation = _velocity.angle()
 	
 
-func reduce_health(points: float) -> void:
-	var new_health = _health_current - points
-	if new_health <= 0:
-		queue_free()
-	else:
-		_health_current = new_health

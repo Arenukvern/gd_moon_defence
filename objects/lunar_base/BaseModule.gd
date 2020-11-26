@@ -1,17 +1,7 @@
-extends KinematicBody2D
-
-export var glassHealth: = 4000.0
-export var metalHealth: = 4000.0
+extends BaseDroidModule
 
 var debug_is_selection_disabled: bool = true
 
-func add_damage(massDistancePoints: int):
-	metalHealth -= massDistancePoints/2
-	glassHealth -= massDistancePoints/2
-
-func recover_points(metal: int =0, glass: int =0)->void:
-	metalHealth += metal
-	glassHealth += glass
 onready var root: = $'.'
 
 const ModuleSelectionScene: = preload('res://objects/lunar_base/ModuleSelection.tscn')
@@ -30,3 +20,22 @@ func _on_BaseModule_input_event(viewport: Node, event: InputEvent, shape_idx: in
 	var isLeftClick = InputHelper.isLeftClick(event)
 	if isLeftClick:
 		self.is_module_selected = not self.is_module_selected
+
+func _init_healthComponents()->void:
+	var oxygenResource: = BaseResourceFactory.getOxygen(mass_kg)
+	var titaniumResource: = BaseResourceFactory.getTitanium(mass_kg)
+	var waterIceResource: = BaseResourceFactory.getWaterIce(mass_kg)
+	var silicaResource: = BaseResourceFactory.getSilica(mass_kg)
+	var glassResource: = BaseResourceFactory.getGlass(mass_kg)
+	var components = [
+		oxygenResource,
+		titaniumResource,
+		silicaResource,
+		waterIceResource,
+		glassResource
+	]
+	health_damage_system.initSystem(components)
+
+func _ready() -> void:
+	mass_kg = 3000.0
+	_init_healthComponents()

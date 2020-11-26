@@ -45,7 +45,8 @@ func _ready() -> void:
 	initial_position = global_position
 	target_global_position = initial_position
 	platform_global_position = initial_position
-
+	_init_healthComponents()
+	
 func _physics_process(delta: float) -> void:
 	
 	if self.is_in_movement and not debug_is_fuel_infinite and fuel_left > 0 :
@@ -193,25 +194,30 @@ func _on_rover_actions_load()->void:
 #	loading droids
 	for droid in rover_collision_droids.values():
 		var id = droid.get_instance_id()
-		var droidClone = droidsFactory.primitiveDroid.instance()
-		droidClone.mass_kg = droid.mass_kg
-		droidClone._total_flying_distance = droid._total_flying_distance
-		rover_collision_droids = removeObjectFromDictionary(rover_collision_droids,droid)
-		loadObjectToRover(droid.mass_kg, droid, droidClone)
+#		first we check mass - is it available and not excided limit
+		var isToLoad:= isAllowedToLoad(droid.mass_kg)
+		if isToLoad:
+			var droidClone = droidsFactory.primitiveDroid.instance()
+			droidClone.mass_kg = droid.mass_kg
+			droidClone._total_flying_distance = droid._total_flying_distance
+			rover_collision_droids = DictionaryHelper.removeObjectFromDictionary(rover_collision_droids,droid, null)
+			loadObjectToRover(droid.mass_kg, droid, droidClone)
 #	loading asteroids
 	for asteroid in rover_collision_asteroids.values():
 		var id = asteroid.get_instance_id()
-		var asteroidClone = asteroidsFactory.iceWateredAsteroid.instance()
-		asteroidClone.mass = asteroid.mass
-		rover_collision_asteroids = removeObjectFromDictionary(rover_collision_asteroids,asteroid)
-		loadObjectToRover(asteroid.mass, asteroid, asteroidClone)
+		var isToLoad:= isAllowedToLoad(asteroid.mass)
+		if isToLoad:
+			var asteroidClone = asteroidsFactory.iceWateredAsteroid.instance()
+			asteroidClone.mass = asteroid.mass
+			rover_collision_asteroids = DictionaryHelper.removeObjectFromDictionary(rover_collision_asteroids,asteroid, null)
+			loadObjectToRover(asteroid.mass, asteroid, asteroidClone)
 	
+func isAllowedToLoad(mass:float)->bool:
+	return mass <= self.loading_mass_capacity_kg_left
 
 func loadObjectToRover(object_mass_kg: float, originalObject, objectInstance)->void:
-#	first we check mass - is it available and not excided limit
-	if object_mass_kg <= self.loading_mass_capacity_kg_left:	
 #	then load to rover
-		objects_loaded.push_back(objectInstance)
+	objects_loaded.push_back(objectInstance)
 #	then clean up
 	originalObject.queue_free()
 
@@ -232,28 +238,15 @@ var rover_collision_asteroids: Dictionary = {}
 
 func _on_RoverCollisionSensor_body_entered(body: PhysicsBody2D) -> void:
 	if body is PrimitiveDroid:
-		rover_collision_droids = pushObjectToDictionary(rover_collision_droids,body)
+		rover_collision_droids = DictionaryHelper.pushObjectToDictionary(rover_collision_droids,body,null)
 	elif body is Asteroid:
-		rover_collision_asteroids = pushObjectToDictionary(rover_collision_asteroids,body)
+		rover_collision_asteroids = DictionaryHelper.pushObjectToDictionary(rover_collision_asteroids,body,null)
 
-func pushObjectToDictionary(dictionary: Dictionary, body: PhysicsBody2D)->Dictionary:
-	var id = body.get_instance_id()
-	var isObjectExists: = dictionary.has(id)
-	if not isObjectExists:
-		dictionary[id] = body
-	return dictionary
 
 func _on_RoverCollisionSensor_body_exited(body: PhysicsBody2D) -> void:
 	if body is Droid:
-		rover_collision_droids = removeObjectFromDictionary(rover_collision_droids,body)
+		rover_collision_droids = DictionaryHelper.removeObjectFromDictionary(rover_collision_droids,body,null)
 	elif body is Asteroid:
-		rover_collision_asteroids = removeObjectFromDictionary(rover_collision_asteroids,body)
-
-func removeObjectFromDictionary(dictionary: Dictionary, body: PhysicsBody2D)->Dictionary:
-	var id = body.get_instance_id()
-	var isObjectExists: = dictionary.has(id)
-	if isObjectExists:
-		dictionary.erase(id)
-	return dictionary
-
-
+		rover_collision_asteroids = DictionaryHelper.removeObjectFromDictionary(rover_collision_asteroids,body,null)
+	
+	
