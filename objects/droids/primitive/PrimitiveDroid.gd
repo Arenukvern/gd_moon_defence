@@ -30,7 +30,10 @@ func get_is_droid_in_orbit() -> bool:
 var is_droid_going_to_refueling: bool = false setget , get_is_droid_going_to_refueling
 func get_is_droid_going_to_refueling() -> bool:
 	return target_global_position == platform_global_position
-	
+var is_droid_going_to_landing: bool = false setget , get_is_droid_going_to_landing
+func get_is_droid_going_to_landing() -> bool:
+	return target_global_position == landing_global_position
+
 var is_tractor_beam_has_objects: bool = false setget , get_is_tractor_beam_has_objects
 func get_is_tractor_beam_has_objects()->bool:
 	return tractor_beam_objects.size() > 0
@@ -140,8 +143,9 @@ func _on_waypoint_selected(arg)->void:
 				target_global_position = waypointPosition
 			platform_global_position = waypointPosition
 		WaypointFactory.PositionType.LANDING:
-			if self.is_droid_landed:
+			if self.is_droid_landed or self.is_droid_going_to_landing:
 				target_global_position = waypointPosition
+				
 			landing_global_position = waypointPosition
 #	rebuild ui waypoints
 	self.are_all_waypoints_shown = true
@@ -313,7 +317,7 @@ func _on_enable_tractor_beam(collisionObject: PhysicsBody2D) -> void:
 		self.is_tractor_beam_enabled = true
 		collisionObject.target_global_position = landing_global_position
 		tractor_beam_objects.push_back(collisionObject)
-		_tractorBeam.rotation = collisionObject._velocity.angle()
+#		_tractorBeam.rotation = collisionObject._velocity.angle()
 		_to_land_droid()
 
 func _eat_tractor_beam_fuel():
