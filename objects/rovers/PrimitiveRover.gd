@@ -3,18 +3,33 @@ extends Droid
 export var max_speed: = 100.0
 onready var root: = $'.'
 onready var massNode: Label = $'mass'
+onready var notEnoughSpaceNode: Label = $'warning_not_enough_space'
 var _total_moved_distance: = 0.0
 
 
 # LOADING SECTION
-var total_rover_mass_kg: = 0.0 setget ,get_total_rover_mass_kg
+func reloadMassLabel(val: float)->void:
+	var valText = String(val)
+	if val < 0 :
+		valText = String(round(self.objects_loaded_mass_kg))
+	if valText == "0" or valText == "0.0":
+		massNode.text = ''
+	else:
+		massNode.text = valText
+	
+var total_rover_mass_kg: = 0.0 setget set_total_rover_mass_kg,get_total_rover_mass_kg
+func set_total_rover_mass_kg(newMass: float)->void:
+	total_rover_mass_kg = newMass
+	if newMass == 0 and objects_loaded.size()>0:
+		objects_loaded.clear()
+		reloadMassLabel(newMass)
+	
 func get_total_rover_mass_kg()->float:
 	return mass_kg + self.objects_loaded_mass_kg
 var objects_loaded: Array = []
 var objects_loaded_mass_kg:= 0.0 setget ,get_objects_loaded_mass_kg
 func get_objects_loaded_mass_kg()->float:
 	if objects_loaded.size() <= 0: 
-		massNode.text = String(0)
 		return 0.0
 	else:
 		var total_mass_kg = 0.0
@@ -24,7 +39,6 @@ func get_objects_loaded_mass_kg()->float:
 					total_mass_kg += objectLoaded.mass
 				elif objectLoaded is Droid:
 					total_mass_kg += objectLoaded.mass_kg
-		massNode.text = String(total_mass_kg)
 		return total_mass_kg
 
 var loading_mass_capacity_kg_max: = 400.0
@@ -54,9 +68,10 @@ func _physics_process(delta: float) -> void:
 	
 	if self.is_droid_in_platform:
 		_refuel_droid()
-		if objects_loaded.size()>0:
-			objects_loaded.clear()
-
+		self.total_rover_mass_kg = 0
+		
+	collides_check()
+	
 var is_selected: = false setget set_is_selected
 const _selectionScene = preload('res://objects/rovers/RoverSelection.tscn') 
 var _selectionInstance 
@@ -111,7 +126,8 @@ func move_rover()->void:
 		max_speed
 	)
 	_velocity = move_and_slide(_velocity)
-
+	if notEnoughSpaceNode.visible:
+		notEnoughSpaceNode.visible = false
 
 # recalculates already made distance and distance left
 # before fuel will go out
@@ -202,6 +218,9 @@ func _on_rover_actions_load()->void:
 			droidClone._total_flying_distance = droid._total_flying_distance
 			rover_collision_droids = DictionaryHelper.removeObjectFromDictionary(rover_collision_droids,droid, null)
 			loadObjectToRover(droid.mass_kg, droid, droidClone)
+		else:
+			notEnoughSpaceNode.visible = true
+			
 #	loading asteroids
 	for asteroid in rover_collision_asteroids.values():
 		var id = asteroid.get_instance_id()
@@ -211,6 +230,10 @@ func _on_rover_actions_load()->void:
 			asteroidClone.mass = asteroid.mass
 			rover_collision_asteroids = DictionaryHelper.removeObjectFromDictionary(rover_collision_asteroids,asteroid, null)
 			loadObjectToRover(asteroid.mass, asteroid, asteroidClone)
+		else:
+			notEnoughSpaceNode.visible = true
+	
+	reloadMassLabel(-1)
 	
 func isAllowedToLoad(mass:float)->bool:
 	return mass <= self.loading_mass_capacity_kg_left

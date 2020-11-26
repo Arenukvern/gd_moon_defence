@@ -258,7 +258,8 @@ func _physics_process(delta: float) -> void:
 
 		if self.is_droid_going_to_refueling and self.is_all_equipment_enabled:
 			self.is_all_equipment_enabled = false
-	
+			
+	collides_check()
 	
 func move_droid()->void:
 	#	calculate distance to eat fuel

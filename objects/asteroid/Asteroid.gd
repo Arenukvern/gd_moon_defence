@@ -20,3 +20,11 @@ onready var _sprite = $body
 var _velocity:= Vector2.ZERO
 var target_global_position: = Vector2.ZERO
 
+func collides_check()->void:
+	for i in get_slide_count():
+		var collision = get_slide_collision(i)
+		if 'health_damage_system' in collision.collider:
+			collision.collider.reduce_health(mass * 0.2)
+
+
+

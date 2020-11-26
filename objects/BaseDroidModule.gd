@@ -11,6 +11,13 @@ func reduce_health(points: float) -> void:
 	if health_damage_system.health <= 0:
 		queue_free()
 
+func collides_check()->void:
+	for i in get_slide_count():
+		var collision = get_slide_collision(i)
+		if 'health_damage_system' in collision.collider:
+			collision.collider.reduce_health(mass_kg * 0.2)
+
+
 
 export var mass_kg: = 10.0
 export var DISTANCE_THRESHOLD: = 3.0

@@ -6,6 +6,7 @@ var componentsDict: Dictionary = {}
 
 func initSystem(componentsArray: Array)->void:
 	for component in componentsArray:
+
 		if component is BaseResourceComponent:
 			componentsDict = DictionaryHelper.pushObjectToDictionary(componentsDict,component, component.id)
 		else:
@@ -25,16 +26,18 @@ func get_health()->float:
 	return _health
 
 func add_random_damage(health_points: float)->void:
+	if componentsDict.size() <= 0: return
 	var componentsMaxDamage = round(health_points / componentsDict.size())
 	for component in componentsDict.values():
-		if component is BaseResourceComponent and component.current_health > 0:
-			randomize()
-			var damageOfComponent = rand_range(1, componentsMaxDamage)
-			component.current_health -= damageOfComponent
-			if component.current_health < 0:
-				component.current_health = 0
+		if component is BaseResourceComponent:
+			if component.current_health > 0:
+				randomize()
+				var damageOfComponent = round(rand_range(1, componentsMaxDamage))
+				component.current_health -= damageOfComponent
+				if component.current_health < 0:
+					component.current_health = 0.0
 		else:
-			print('Wrong get_health HealthDamageSystem: component is not Base Component!')
+			print('Wrong add_random_damage HealthDamageSystem: component is not Base Component!')
 
 func recover_component(componentsArray: Array)->void:
 	for component in componentsArray:
@@ -46,7 +49,7 @@ func recover_component(componentsArray: Array)->void:
 				if existedComponent.current_health > existedComponent.origin_health:
 					existedComponent.current_health = existedComponent.origin_health
 		else:
-			print('Wrong init HealthDamageSystem: component is not Base Component!')
+			print('Wrong recover_component HealthDamageSystem: component is not Base Component!')
 
 
 
