@@ -1,0 +1,93 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://ui/theme/Theme24.tres" type="Theme" id=1]
+[ext_resource path="res://ui/MainMenu.gd" type="Script" id=2]
+[ext_resource path="res://assets/backgrounds/benjamin-voros-U-Kty6HxcQc-unsplash.jpg" type="Texture" id=3]
+[ext_resource path="res://ui/Buttons/MainMenuButton.tscn" type="PackedScene" id=4]
+
+[node name="MainMenu" type="Control"]
+pause_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="benjamin-voros-U-Kty6HxcQc-unsplash" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 3 )
+expand = true
+
+[node name="PhotoCopyright" type="Label" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -39.0
+margin_right = 441.0
+text = "Photo by Benjamin Voros on Unsplash"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="TitleContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -109.0
+margin_top = 191.0
+margin_right = 109.0
+margin_bottom = 231.0
+
+[node name="TitleLabel" type="Label" parent="TitleContainer"]
+margin_right = 218.0
+margin_bottom = 40.0
+size_flags_vertical = 3
+text = "MOON DEFENCE"
+align = 1
+valign = 1
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -108.0
+margin_top = -273.0
+margin_right = 109.0
+margin_bottom = -39.0
+custom_constants/separation = 6
+
+[node name="ContinueButton" type="Button" parent="ButtonsContainer"]
+margin_right = 217.0
+margin_bottom = 42.0
+size_flags_vertical = 3
+text = "Continue"
+
+[node name="RestartMissionButton2" parent="ButtonsContainer" instance=ExtResource( 4 )]
+margin_top = 48.0
+margin_right = 217.0
+margin_bottom = 90.0
+text = "Restart Mission"
+next_scene_path = "res://levels/MoonFlat.tscn"
+
+[node name="AboutButton" type="Button" parent="ButtonsContainer"]
+margin_top = 96.0
+margin_right = 217.0
+margin_bottom = 138.0
+size_flags_vertical = 3
+text = "About"
+
+[node name="HelpButton" type="Button" parent="ButtonsContainer"]
+margin_top = 144.0
+margin_right = 217.0
+margin_bottom = 186.0
+size_flags_vertical = 3
+text = "Help"
+
+[node name="ExitButton" type="Button" parent="ButtonsContainer"]
+margin_top = 192.0
+margin_right = 217.0
+margin_bottom = 234.0
+size_flags_vertical = 3
+text = "Exit"
+
+[connection signal="button_up" from="ButtonsContainer/ContinueButton" to="." method="_on_ContinueButton_button_up"]
+[connection signal="button_up" from="ButtonsContainer/ExitButton" to="." method="_on_ExitButton_button_up"]

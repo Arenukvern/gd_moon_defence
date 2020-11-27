@@ -257,9 +257,7 @@ func _physics_process(delta: float) -> void:
 			_sync_tractor_beam_object_velocity()
 	
 	if self.is_in_movement:
-
 		move_droid()
-
 		if self.is_droid_going_to_refueling and self.is_all_equipment_enabled:
 			self.is_all_equipment_enabled = false
 			

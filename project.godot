@@ -141,17 +141,18 @@ _global_script_class_icons={
 [application]
 
 config/name="Moon Colony Defender"
-run/main_scene="res://levels/MoonFlat.tscn"
+run/main_scene="res://ui/MainMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-UIState="*res://autoload/states/UIState.gd"
+UIState="*res://autoload/states/UIState.tscn"
 PhisicsState="*res://autoload/states/PhisicsState.gd"
 Steering="*res://autoload/Steering.gd"
 BaseResourcesState="*res://autoload/states/BaseResourcesState.gd"
 AsteroidsState="*res://autoload/states/AsteroidsState.gd"
 DroidsState="*res://autoload/states/DroidsState.gd"
+WaypointsState="*res://autoload/states/WaypointsState.tscn"
 
 [layer_names]
 
