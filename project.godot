@@ -74,6 +74,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://helpers/InputHelper.gd"
 }, {
+"base": "Control",
+"class": "MainMenu",
+"language": "GDScript",
+"path": "res://ui/MainMenu.gd"
+}, {
 "base": "Droid",
 "class": "PrimitiveDroid",
 "language": "GDScript",
@@ -128,6 +133,7 @@ _global_script_class_icons={
 "HealthDamageSystem": "",
 "IceWateredAsteroid": "",
 "InputHelper": "",
+"MainMenu": "",
 "PrimitiveDroid": "",
 "RoverActions": "",
 "ShortRangeSensor": "",
@@ -141,7 +147,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Moon Colony Defender"
-run/main_scene="res://ui/MainMenu.tscn"
+run/main_scene="res://levels/ScenesRoot.tscn"
 config/icon="res://icon.png"
 
 [autoload]

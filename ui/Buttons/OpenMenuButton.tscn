@@ -1,24 +1,14 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://ui/Buttons/OpenMenuButton.gd" type="Script" id=1]
-[ext_resource path="res://ui/theme/Theme24.tres" type="Theme" id=2]
+[ext_resource path="res://ui/theme/Theme24.tres" type="Theme" id=1]
+[ext_resource path="res://ui/Buttons/OpenMenuButton.gd" type="Script" id=2]
 
-[node name="OpenMenuButton" type="Control"]
-margin_right = 167.0
-margin_bottom = 41.0
-rect_pivot_offset = Vector2( 84, 21 )
-script = ExtResource( 1 )
-
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_right = 167.0
-margin_bottom = 41.0
-rect_pivot_offset = Vector2( 84, 21 )
-
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="OpenMenuButton" type="Button"]
 margin_right = 167.0
 margin_bottom = 41.0
 size_flags_vertical = 3
-theme = ExtResource( 2 )
+theme = ExtResource( 1 )
 text = "Menu"
+script = ExtResource( 2 )
 
-[connection signal="button_up" from="VBoxContainer/Button" to="." method="_on_Button_button_up"]
+[connection signal="button_up" from="." to="." method="_on_OpenMenuButton_button_up"]

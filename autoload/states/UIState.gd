@@ -5,13 +5,21 @@ class_name UIState
 signal debug_menu_state_updated(enabled)
 
 onready var root: = get_tree().get_root()
-
+onready var scenesRoot: = root.get_node('ScenesRoot')
 var current_scene = null
 
-func _ready():
-    var root = get_tree().get_root()
-    current_scene = root.get_child(root.get_child_count() - 1)
+#temporary level management
+const MainMenuScene: = preload('res://ui/MainMenu.tscn')
+var _mainMenu: MainMenu 
 
+onready var _moonFlat: MainMenu = scenesRoot.get_node('MoonFlat')
+
+func _ready():
+	_mainMenu = scenesRoot.get_node('MainMenu')
+	current_scene= _moonFlat
+	get_tree().set_current_scene(_moonFlat)
+	openMainMenu()
+	
 func goto_scene(path):
     # This function will usually be called from a signal callback,
     # or some other function in the current scene.
@@ -35,13 +43,17 @@ func _deferred_goto_scene(path):
     current_scene = s.instance()
 
     # Add it to the active scene, as child of root.
-    root.add_child(current_scene)
+    scenesRoot.add_child(current_scene)
 
     # Optionally, to make it compatible with the SceneTree.change_scene() API.
     get_tree().set_current_scene(current_scene)
 
 
 onready var waypointsLayer: = root.get_node("/root/WaypointsState")
+onready var asteroidsState: = root.get_node("/root/AsteroidsState")
+onready var baseResourceState: = root.get_node("/root/BaseResourcesState")
+onready var droidsState: = root.get_node("/root/DroidsState")
+
 const WaypointsManagerScene: = preload('res://ui/WaypointsManager.tscn')
 var waypointManager: Node
 const signal_name_debug_menu_state_updated: = 'debug_menu_state_updated'
@@ -75,7 +87,27 @@ func set_isWaypointsManagerOpen(isEnable: bool)->void:
 func _on_close_waypoints_selection()->void:
 	self.isWaypointsManagerOpen = false
 
-
 func openMainMenu()->void:
-	self.goto_scene('res://ui/MainMenu.tscn')
+	current_scene.is_ui_visible = false
+	get_tree().paused = true
+	current_scene.visible = false
+	if not is_instance_valid(_mainMenu) or not _mainMenu is MainMenu:
+		_mainMenu = MainMenuScene.instance()
+		scenesRoot.add_child(_mainMenu)	
+	
+func closeMainMenu()->void:
+	if is_instance_valid(_mainMenu):
+		_mainMenu.queue_free()
+	get_tree().paused = false
+	current_scene.visible = true
+	current_scene.is_ui_visible = true
+	
+	
+func restartgame()->void:
+	var arr = [droidsState,baseResourceState,asteroidsState, waypointsLayer]
+	for stateNode in arr:
+		for child in stateNode.get_children():
+			child.queue_free()
+	closeMainMenu()
+	goto_scene('res://levels/MoonFlat.tscn')
 	

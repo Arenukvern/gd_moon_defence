@@ -1,6 +1,7 @@
 extends Node
 
 onready var root: Node = $'.'
+
 export var acceleration_initial: = 300.0
 export var acceleration_explosive_max: = 600.0
 export var acceleration_explosive_min: = 400.0
