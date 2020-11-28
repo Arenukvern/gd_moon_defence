@@ -24,8 +24,18 @@ anchor_top = 1.0
 anchor_bottom = 1.0
 margin_top = -39.0
 margin_right = 441.0
+custom_fonts/font = ExtResource( 4 )
 text = "Photo by Benjamin Voros on Unsplash"
 align = 1
+valign = 1
+autowrap = true
+
+[node name="Idea" type="Label" parent="."]
+margin_top = 22.0
+margin_right = 441.0
+margin_bottom = 67.0
+custom_fonts/font = ExtResource( 4 )
+text = "Have an idea or bug or want to contribute - left a message to instagram xsoulspace or idea@xsoulspace.dev !"
 valign = 1
 autowrap = true
 
@@ -57,6 +67,7 @@ align = 1
 valign = 1
 
 [node name="ButtonsContainer" type="VBoxContainer" parent="."]
+editor/display_folded = true
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -102,20 +113,20 @@ size_flags_vertical = 3
 text = "Exit"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+editor/display_folded = true
 
 [node name="WindowDialog" type="WindowDialog" parent="CanvasLayer"]
-visible = true
 modulate = Color( 0.760784, 0.85098, 0.933333, 0.92549 )
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -271.0
-margin_top = 113.0
-margin_right = 271.0
-margin_bottom = 519.0
+margin_left = -256.0
+margin_top = 40.0
+margin_right = 286.0
+margin_bottom = 576.0
 rect_min_size = Vector2( 400, 300 )
 theme = ExtResource( 1 )
 
 [connection signal="button_up" from="ButtonsContainer/ContinueButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="ButtonsContainer/HighscoreButton" to="." method="_on_HighscoreButton_button_up"]
+[connection signal="button_up" from="ButtonsContainer/HelpButton" to="." method="_on_HelpButton_button_up"]
 [connection signal="button_up" from="ButtonsContainer/ExitButton" to="." method="_on_ExitButton_button_up"]
-[connection signal="popup_hide" from="CanvasLayer/WindowDialog" to="." method="_on_WindowDialog_popup_hide"]

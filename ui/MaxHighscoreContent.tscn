@@ -28,13 +28,13 @@ margin_top = 36.0
 margin_right = 370.0
 margin_bottom = 50.0
 
-[node name="highscore2" type="Label" parent="VBoxContainer"]
+[node name="GoodLuck" type="Label" parent="VBoxContainer"]
 margin_top = 54.0
 margin_right = 370.0
 margin_bottom = 216.0
 size_flags_vertical = 3
 text = "Every try just makes possible what we're trying to find or study.
-So keep trying and good luck with any task or job!"
+So keep trying and good luck with any task in your life!"
 valign = 1
 autowrap = true
 

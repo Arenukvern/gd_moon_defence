@@ -17,18 +17,33 @@ var _highscoreContent
 func set_is_highscore_window_active(isEnable: bool):
 	is_highscore_window_active = isEnable
 	if isEnable:
-		windowDialog.visible = true
 		if not is_instance_valid(_highscoreContent):
 			_highscoreContent = HighscoreContentScene.instance()
 			windowDialog.add_child(_highscoreContent)
 	else:
-		windowDialog.visible = false
+		print(is_instance_valid(_highscoreContent))
 		if is_instance_valid(_highscoreContent):
 			_highscoreContent.queue_free()
 
 func _on_HighscoreButton_button_up() -> void:
+	windowDialog.visible = true
 	self.is_highscore_window_active = true
-
-func _on_WindowDialog_popup_hide() -> void:
-	self.is_highscore_window_active = false
+	self.is_help_window_active = false
 	
+var is_help_window_active: bool = false setget set_is_help_window_active
+const HelpContentScene: = preload('res://ui/HelpContent.tscn')
+var _helpContent
+func set_is_help_window_active(isEnable: bool):
+	is_help_window_active = isEnable
+	if isEnable:
+		if not is_instance_valid(_helpContent):
+			_helpContent = HelpContentScene.instance()
+			windowDialog.add_child(_helpContent)
+	else:
+		if is_instance_valid(_helpContent):
+			_helpContent.queue_free()
+
+func _on_HelpButton_button_up() -> void:
+	windowDialog.visible = true
+	self.is_highscore_window_active = false
+	self.is_help_window_active = true
