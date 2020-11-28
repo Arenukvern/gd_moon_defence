@@ -12,46 +12,47 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 771.0
-margin_bottom = -477.0
+margin_bottom = -389.0
 script = ExtResource( 1 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="ButtonsContainer" type="VBoxContainer" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -253.0
-margin_bottom = 123.0
+margin_bottom = 211.0
 theme = ExtResource( 2 )
 
-[node name="OpenMenuButton" parent="VBoxContainer" instance=ExtResource( 3 )]
+[node name="OpenMenuButton" parent="ButtonsContainer" instance=ExtResource( 3 )]
 margin_right = 253.0
-margin_bottom = 37.0
+margin_bottom = 31.0
 
-[node name="OpenButton" type="Button" parent="VBoxContainer"]
-margin_top = 41.0
+[node name="OpenButton" type="Button" parent="ButtonsContainer"]
+margin_top = 35.0
 margin_right = 253.0
-margin_bottom = 62.0
+margin_bottom = 56.0
 custom_fonts/font = ExtResource( 4 )
 text = "Debug menu"
 flat = true
 script = ExtResource( 5 )
 
-[node name="SpawnAsteroids" type="Button" parent="VBoxContainer"]
-margin_top = 66.0
+[node name="SpawnAsteroids" type="Button" parent="ButtonsContainer"]
+margin_top = 60.0
 margin_right = 253.0
-margin_bottom = 87.0
+margin_bottom = 81.0
 custom_fonts/font = ExtResource( 4 )
 text = "Spawn asteroids"
 flat = true
 script = ExtResource( 6 )
 
-[node name="SpawnAsteroidToMouseClick" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 91.0
+[node name="SpawnAsteroidToMouseClick" type="HBoxContainer" parent="ButtonsContainer"]
+editor/display_folded = true
+margin_top = 85.0
 margin_right = 253.0
-margin_bottom = 123.0
+margin_bottom = 117.0
 size_flags_horizontal = 3
 script = ExtResource( 7 )
 
-[node name="SpawnAsteroidToMouseClickButton" type="Button" parent="VBoxContainer/SpawnAsteroidToMouseClick"]
+[node name="SpawnAsteroidToMouseClickButton" type="Button" parent="ButtonsContainer/SpawnAsteroidToMouseClick"]
 margin_right = 185.0
 margin_bottom = 32.0
 size_flags_horizontal = 3
@@ -60,12 +61,42 @@ text = "Spawn asteroid in click"
 flat = true
 align = 0
 
-[node name="SpawnAsteroidMouseClickCheckButton" type="CheckButton" parent="VBoxContainer/SpawnAsteroidToMouseClick"]
+[node name="SpawnAsteroidMouseClickCheckButton" type="CheckButton" parent="ButtonsContainer/SpawnAsteroidToMouseClick"]
 margin_left = 189.0
 margin_right = 253.0
 margin_bottom = 32.0
 
-[connection signal="button_up" from="VBoxContainer/OpenButton" to="VBoxContainer/OpenButton" method="_on_OpenButton_button_up"]
-[connection signal="button_up" from="VBoxContainer/SpawnAsteroids" to="VBoxContainer/SpawnAsteroids" method="_on_SpawnAsteroids_button_up"]
-[connection signal="button_up" from="VBoxContainer/SpawnAsteroidToMouseClick/SpawnAsteroidToMouseClickButton" to="VBoxContainer/SpawnAsteroidToMouseClick" method="_on_SpawnAsteroidToMouseClickButton_button_up"]
-[connection signal="button_up" from="VBoxContainer/SpawnAsteroidToMouseClick/SpawnAsteroidMouseClickCheckButton" to="VBoxContainer/SpawnAsteroidToMouseClick" method="_on_SpawnAsteroidMouseClickCheckButton_button_up"]
+[node name="DroidsLostCurrentHighscore" type="Label" parent="ButtonsContainer"]
+margin_top = 121.0
+margin_right = 253.0
+margin_bottom = 148.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "A"
+autowrap = true
+
+[node name="AsteroidsFellCurrentHighscore" type="Label" parent="ButtonsContainer"]
+margin_top = 152.0
+margin_right = 253.0
+margin_bottom = 179.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "A"
+autowrap = true
+
+[node name="DroidsLimit" type="Label" parent="ButtonsContainer"]
+margin_top = 183.0
+margin_right = 253.0
+margin_bottom = 211.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "A"
+autowrap = true
+
+[connection signal="button_up" from="ButtonsContainer/OpenButton" to="ButtonsContainer/OpenButton" method="_on_OpenButton_button_up"]
+[connection signal="button_up" from="ButtonsContainer/SpawnAsteroids" to="ButtonsContainer/SpawnAsteroids" method="_on_SpawnAsteroids_button_up"]
+[connection signal="button_up" from="ButtonsContainer/SpawnAsteroidToMouseClick/SpawnAsteroidToMouseClickButton" to="ButtonsContainer/SpawnAsteroidToMouseClick" method="_on_SpawnAsteroidToMouseClickButton_button_up"]
+[connection signal="button_up" from="ButtonsContainer/SpawnAsteroidToMouseClick/SpawnAsteroidMouseClickCheckButton" to="ButtonsContainer/SpawnAsteroidToMouseClick" method="_on_SpawnAsteroidMouseClickCheckButton_button_up"]

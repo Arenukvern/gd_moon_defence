@@ -8,5 +8,5 @@ func set_is_ui_visible(isVisible:bool)->void:
 		uiDebug.visible = isVisible
 	else: 
 		var uiDebugTemp := $'./MenuLayer/UIDebug'
-		print(uiDebugTemp)
 		uiDebugTemp.visible = isVisible
+		

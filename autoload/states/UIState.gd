@@ -3,10 +3,57 @@ extends Node
 class_name UIState
 
 signal debug_menu_state_updated(enabled)
+const signal_name_debug_menu_state_updated: = 'debug_menu_state_updated'
+const signal_func_name_debug_menu_state_updated: = "_on_%s" % signal_name_debug_menu_state_updated
 
+signal highscore_updated
+const signal_name_highscore_updated: = 'highscore_updated'
+const signal_func_name_highscore_updated: = "_on_%s" % signal_name_highscore_updated
+
+onready var saveLoadHelper = load('res://helpers/SaveLoadHelper.gd').new()
+
+func getSave():
+    var save_dict = {
+		'droidsLostHighscore': droidsLostHighscore,
+		'asteroidsQuantityHighscore':asteroidsQuantityHighscore
+    }
+    return save_dict
+	
 onready var root: = get_tree().get_root()
 onready var scenesRoot: = root.get_node('ScenesRoot')
 var current_scene = null
+
+# HIGHSCORE
+var asteroidsQuantityHighscoreCurrent: float = 0.0 setget set_asteroidsQuantityHighscoreCurrent
+func set_asteroidsQuantityHighscoreCurrent(highscore: float)->void:
+	asteroidsQuantityHighscoreCurrent = highscore
+	emitHighscoreUpdated()
+
+func emitHighscoreUpdated()->void:
+	compareHighscoresAndSetNew()
+	saveLoadHelper.saveUiState(self)
+
+func addAsteroidToHighscore()->void:
+	self.asteroidsQuantityHighscoreCurrent += 1
+
+var asteroidsQuantityHighscore: float= 0.0
+var droidsLostHighscore: float = 0.0
+var droidsLostHighscoreCurrent: float = 0.0 setget set_droidsLostHighscoreCurrent
+func set_droidsLostHighscoreCurrent(highscore: float)->void:
+	droidsLostHighscoreCurrent = highscore
+	emitHighscoreUpdated()
+func addDroidFellToHighscore()->void:
+	self.droidsLostHighscoreCurrent += 1
+func compareHighscoresAndSetNew()->void:
+	if self.droidsLostHighscoreCurrent > droidsLostHighscore:
+		droidsLostHighscore = self.droidsLostHighscoreCurrent
+	if self.asteroidsQuantityHighscoreCurrent > asteroidsQuantityHighscore:
+		asteroidsQuantityHighscore = self.asteroidsQuantityHighscoreCurrent
+	emit_signal(signal_name_highscore_updated)
+
+func resetCurrentHighscore():
+	self.droidsLostHighscoreCurrent = 0
+	self.asteroidsQuantityHighscoreCurrent = 0
 
 #temporary level management
 const MainMenuScene: = preload('res://ui/MainMenu.tscn')
@@ -15,11 +62,13 @@ var _mainMenu: MainMenu
 onready var _moonFlat: MainMenu = scenesRoot.get_node('MoonFlat')
 
 func _ready():
+	saveLoadHelper.loadUiState(self)
 	_mainMenu = scenesRoot.get_node('MainMenu')
 	current_scene= _moonFlat
 	get_tree().set_current_scene(_moonFlat)
 	openMainMenu()
-	
+	compareHighscoresAndSetNew()
+
 func goto_scene(path):
     # This function will usually be called from a signal callback,
     # or some other function in the current scene.
@@ -30,23 +79,23 @@ func goto_scene(path):
     # The solution is to defer the load to a later time, when
     # we can be sure that no code from the current scene is running:
 
-    call_deferred("_deferred_goto_scene", path)
+	call_deferred("_deferred_goto_scene", path)
 
 func _deferred_goto_scene(path):
     # It is now safe to remove the current scene
-    current_scene.free()
+	current_scene.free()
 
     # Load the new scene.
-    var s = ResourceLoader.load(path)
+	var s = ResourceLoader.load(path)
 
     # Instance the new scene.
-    current_scene = s.instance()
+	current_scene = s.instance()
 
     # Add it to the active scene, as child of root.
-    scenesRoot.add_child(current_scene)
+	scenesRoot.add_child(current_scene)
 
     # Optionally, to make it compatible with the SceneTree.change_scene() API.
-    get_tree().set_current_scene(current_scene)
+	get_tree().set_current_scene(current_scene)
 
 
 onready var waypointsLayer: = root.get_node("/root/WaypointsState")
@@ -56,8 +105,6 @@ onready var droidsState: = root.get_node("/root/DroidsState")
 
 const WaypointsManagerScene: = preload('res://ui/WaypointsManager.tscn')
 var waypointManager: Node
-const signal_name_debug_menu_state_updated: = 'debug_menu_state_updated'
-const signal_func_name_debug_menu_state_updated: = "_on_%s" % signal_name_debug_menu_state_updated
 
 var isDebugMenuOpen:= false setget set_isDebugMenuOpen
 
@@ -104,10 +151,15 @@ func closeMainMenu()->void:
 	
 	
 func restartgame()->void:
-	var arr = [droidsState,baseResourceState,asteroidsState, waypointsLayer]
+	var arr = [baseResourceState,asteroidsState, waypointsLayer]
 	for stateNode in arr:
 		for child in stateNode.get_children():
 			child.queue_free()
+	droidsState.clearChildren()
+	
 	closeMainMenu()
+	resetCurrentHighscore()
 	goto_scene('res://levels/MoonFlat.tscn')
+
+
 	

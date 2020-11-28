@@ -2,13 +2,15 @@ extends KinematicBody2D
 
 class_name BaseDroidModule
 
-onready var projectRoot := $"/root/"
+onready var projectRoot := get_tree().get_root()
+onready var uiState := projectRoot.get_node("/root/UIState")
 
 # !!! must be filled with base resourse components !!!
 var health_damage_system: HealthDamageSystem = HealthDamageSystem.new()
 func reduce_health(points: float) -> void:
 	health_damage_system.add_random_damage(points)
 	if health_damage_system.health <= 0:
+		uiState.addDroidFellToHighscore()
 		queue_free()
 
 func collides_check()->void:

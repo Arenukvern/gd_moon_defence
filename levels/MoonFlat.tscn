@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://levels/MoonFlat.gd" type="Script" id=1]
-[ext_resource path="res://ui_debug/UIDebug.tscn" type="PackedScene" id=2]
-[ext_resource path="res://objects/lunar_base/BaseModule.tscn" type="PackedScene" id=3]
-[ext_resource path="res://objects/droid_platform/primitive/PrimitiveDroidPlatform.tscn" type="PackedScene" id=4]
-[ext_resource path="res://assets/MoonTileMap.tres" type="TileSet" id=5]
-[ext_resource path="res://objects/rovers/PrimitiveRover.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/backgrounds/SpaceBackground.svg" type="Texture" id=2]
+[ext_resource path="res://ui_debug/UIDebug.tscn" type="PackedScene" id=3]
+[ext_resource path="res://objects/lunar_base/BaseModule.tscn" type="PackedScene" id=4]
+[ext_resource path="res://objects/droid_platform/primitive/PrimitiveDroidPlatform.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/MoonTileMap.tres" type="TileSet" id=6]
+[ext_resource path="res://objects/rovers/PrimitiveRover.tscn" type="PackedScene" id=7]
 
 [node name="MoonFlat" type="Node2D"]
 script = ExtResource( 1 )
@@ -19,25 +20,37 @@ layer = 100
 
 [node name="Node" type="Node" parent="WaypointsManagerLayer"]
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+editor/display_folded = true
+layer = -1
+
+[node name="SpaceBackground" type="TextureRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 2
+
 [node name="MenuLayer" type="CanvasLayer" parent="."]
 
-[node name="UIDebug" parent="MenuLayer" instance=ExtResource( 2 )]
+[node name="UIDebug" parent="MenuLayer" instance=ExtResource( 3 )]
 margin_left = 787.0
 margin_bottom = -501.0
 
-[node name="BaseModule" parent="." instance=ExtResource( 3 )]
+[node name="BaseModule" parent="." instance=ExtResource( 4 )]
 position = Vector2( 523, 480 )
 
-[node name="PrimitiveDroidPlatform" parent="." instance=ExtResource( 4 )]
+[node name="PrimitiveDroidPlatform" parent="." instance=ExtResource( 5 )]
 position = Vector2( 49.8737, 511.79 )
 
 [node name="TileMap" type="TileMap" parent="."]
-tile_set = ExtResource( 5 )
+tile_set = ExtResource( 6 )
 collision_layer = 16
 collision_mask = 0
 format = 1
 tile_data = PoolIntArray( 524288, 3, 0, 524289, 3, 0, 524290, 3, 0, 524291, 3, 0, 524292, 3, 0, 524293, 3, 0, 524294, 3, 0, 524295, 3, 0, 524296, 3, 0, 524297, 3, 0, 524298, 3, 0, 524299, 3, 0, 524300, 3, 0, 524301, 3, 0, 524302, 3, 0, 524303, 3, 0, 589824, 3, 0, 589825, 3, 0, 589826, 3, 0, 589827, 3, 0, 589828, 3, 0, 589829, 3, 0, 589830, 3, 0, 589831, 3, 0, 589832, 3, 0, 589833, 3, 0, 589834, 3, 0, 589835, 3, 0, 589836, 3, 0, 589837, 3, 0, 589838, 3, 0, 589839, 3, 0 )
 
-[node name="PrimitiveRover" parent="." instance=ExtResource( 6 )]
+[node name="PrimitiveRover" parent="." instance=ExtResource( 7 )]
 position = Vector2( 523, 512 )
 

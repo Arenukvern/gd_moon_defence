@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ui/theme/Theme24.tres" type="Theme" id=1]
 [ext_resource path="res://ui/MainMenu.gd" type="Script" id=2]
 [ext_resource path="res://assets/backgrounds/benjamin-voros-U-Kty6HxcQc-unsplash.jpg" type="Texture" id=3]
-[ext_resource path="res://ui/Buttons/MainMenuButton.tscn" type="PackedScene" id=4]
+[ext_resource path="res://ui/font/Font16.tres" type="DynamicFont" id=4]
+[ext_resource path="res://ui/Buttons/MainMenuButton.tscn" type="PackedScene" id=5]
 
 [node name="MainMenu" type="Control"]
 pause_mode = 2
@@ -29,6 +30,7 @@ valign = 1
 autowrap = true
 
 [node name="TitleContainer" type="VBoxContainer" parent="."]
+editor/display_folded = true
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -109.0
@@ -38,9 +40,19 @@ margin_bottom = 231.0
 
 [node name="TitleLabel" type="Label" parent="TitleContainer"]
 margin_right = 218.0
-margin_bottom = 40.0
+margin_bottom = 31.0
 size_flags_vertical = 3
 text = "MOON DEFENCE"
+align = 1
+valign = 1
+
+[node name="Xsoulspace" type="Label" parent="TitleContainer"]
+margin_top = 35.0
+margin_right = 218.0
+margin_bottom = 56.0
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "by xsoulspace"
 align = 1
 valign = 1
 
@@ -61,19 +73,19 @@ margin_bottom = 42.0
 size_flags_vertical = 3
 text = "Continue"
 
-[node name="RestartMissionButton2" parent="ButtonsContainer" instance=ExtResource( 4 )]
+[node name="RestartMissionButton2" parent="ButtonsContainer" instance=ExtResource( 5 )]
 margin_top = 48.0
 margin_right = 217.0
 margin_bottom = 90.0
 text = "Restart Mission"
 next_scene_path = "res://levels/MoonFlat.tscn"
 
-[node name="AboutButton" type="Button" parent="ButtonsContainer"]
+[node name="HighscoreButton" type="Button" parent="ButtonsContainer"]
 margin_top = 96.0
 margin_right = 217.0
 margin_bottom = 138.0
 size_flags_vertical = 3
-text = "About"
+text = "Highscore"
 
 [node name="HelpButton" type="Button" parent="ButtonsContainer"]
 margin_top = 144.0
@@ -89,5 +101,21 @@ margin_bottom = 234.0
 size_flags_vertical = 3
 text = "Exit"
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="WindowDialog" type="WindowDialog" parent="CanvasLayer"]
+visible = true
+modulate = Color( 0.760784, 0.85098, 0.933333, 0.92549 )
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -271.0
+margin_top = 113.0
+margin_right = 271.0
+margin_bottom = 519.0
+rect_min_size = Vector2( 400, 300 )
+theme = ExtResource( 1 )
+
 [connection signal="button_up" from="ButtonsContainer/ContinueButton" to="." method="_on_ContinueButton_button_up"]
+[connection signal="button_up" from="ButtonsContainer/HighscoreButton" to="." method="_on_HighscoreButton_button_up"]
 [connection signal="button_up" from="ButtonsContainer/ExitButton" to="." method="_on_ExitButton_button_up"]
+[connection signal="popup_hide" from="CanvasLayer/WindowDialog" to="." method="_on_WindowDialog_popup_hide"]

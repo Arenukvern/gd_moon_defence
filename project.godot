@@ -89,6 +89,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://objects/rovers/RoverActions.gd"
 }, {
+"base": "Node",
+"class": "SaveLoadHelper",
+"language": "GDScript",
+"path": "res://helpers/SaveLoadHelper.gd"
+}, {
 "base": "Area2D",
 "class": "ShortRangeSensor",
 "language": "GDScript",
@@ -136,6 +141,7 @@ _global_script_class_icons={
 "MainMenu": "",
 "PrimitiveDroid": "",
 "RoverActions": "",
+"SaveLoadHelper": "",
 "ShortRangeSensor": "",
 "TractorBeam": "",
 "UIState": "",
@@ -159,6 +165,11 @@ BaseResourcesState="*res://autoload/states/BaseResourcesState.gd"
 AsteroidsState="*res://autoload/states/AsteroidsState.gd"
 DroidsState="*res://autoload/states/DroidsState.gd"
 WaypointsState="*res://autoload/states/WaypointsState.tscn"
+
+[display]
+
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
 
 [layer_names]
 
