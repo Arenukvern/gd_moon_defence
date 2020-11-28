@@ -7,6 +7,10 @@ signal close_waypoints_selection
 const signal_name_close_waypoints_selection: = 'close_waypoints_selection'
 const signal_func_name_close_waypoints_selection: = "_on_%s" % signal_name_close_waypoints_selection
 
+signal reboot_droids_power
+const signal_name_reboot_droids_power: = 'reboot_droids_power'
+const signal_func_name_reboot_droids_power: = "_on_%s" % signal_name_reboot_droids_power
+
 class_name WaypointsManager
 
 onready var _orbitCheckBtn = $'./MarginContainer/VBoxContainer/Orbit/OrbitCheckBtn'
@@ -74,3 +78,6 @@ func _on_CloseBtn_button_up() -> void:
 
 func closeSelected()->void:
 	emit_signal(signal_name_close_waypoints_selection)
+
+func _on_RebootPower_button_up() -> void:
+	emit_signal(signal_name_reboot_droids_power)

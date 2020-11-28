@@ -4,7 +4,7 @@
 
 [node name="WaypointsManager" type="Panel"]
 margin_right = 176.0
-margin_bottom = 161.0
+margin_bottom = 176.0
 script = ExtResource( 1 )
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -14,19 +14,18 @@ margin_left = 5.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_right = 171.0
-margin_bottom = 161.0
+margin_bottom = 176.0
 alignment = 1
 
 [node name="CloseBtn" type="Button" parent="MarginContainer/VBoxContainer"]
-margin_top = 4.0
 margin_right = 171.0
-margin_bottom = 24.0
+margin_bottom = 20.0
 text = "Close"
 
 [node name="Orbit" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 28.0
+margin_top = 24.0
 margin_right = 171.0
-margin_bottom = 68.0
+margin_bottom = 64.0
 
 [node name="Red" type="ColorRect" parent="MarginContainer/VBoxContainer/Orbit"]
 margin_right = 3.0
@@ -47,9 +46,9 @@ margin_bottom = 27.0
 text = "Orbit"
 
 [node name="Platform" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 72.0
+margin_top = 68.0
 margin_right = 171.0
-margin_bottom = 112.0
+margin_bottom = 108.0
 
 [node name="Purple" type="ColorRect" parent="MarginContainer/VBoxContainer/Platform"]
 margin_right = 3.0
@@ -70,9 +69,9 @@ margin_bottom = 27.0
 text = "Platform"
 
 [node name="Landing" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 116.0
+margin_top = 112.0
 margin_right = 171.0
-margin_bottom = 156.0
+margin_bottom = 152.0
 
 [node name="Yellow" type="ColorRect" parent="MarginContainer/VBoxContainer/Landing"]
 margin_right = 3.0
@@ -92,9 +91,16 @@ margin_right = 136.0
 margin_bottom = 27.0
 text = "Landing"
 
+[node name="RebootPower" type="Button" parent="MarginContainer/VBoxContainer"]
+margin_top = 156.0
+margin_right = 171.0
+margin_bottom = 176.0
+text = "Reboot Power"
+
 [connection signal="mouse_entered" from="." to="." method="_on_WaypointsManager_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_WaypointsManager_mouse_exited"]
 [connection signal="button_up" from="MarginContainer/VBoxContainer/CloseBtn" to="." method="_on_CloseBtn_button_up"]
 [connection signal="gui_input" from="MarginContainer/VBoxContainer/Orbit" to="." method="_on_Orbit_gui_input"]
 [connection signal="gui_input" from="MarginContainer/VBoxContainer/Platform" to="." method="_on_Platform_gui_input"]
 [connection signal="gui_input" from="MarginContainer/VBoxContainer/Landing" to="." method="_on_Landing_gui_input"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/RebootPower" to="." method="_on_RebootPower_button_up"]
