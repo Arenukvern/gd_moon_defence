@@ -130,9 +130,9 @@ func _connect_waypoints_manager()->void:
 	)
 
 func _on_reboot_droids_power()->void:
-	self.is_short_range_sensor_enabled = true
+	self.is_all_equipment_enabled = false
 	target_global_position = platform_global_position
-	
+	_acceleration_current = acceleration_initial
 
 func _on_close_waypoints_selection()->void:
 	self.is_droid_selected = false
