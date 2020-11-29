@@ -1,11 +1,11 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://objects/rovers/PrimitiveRover.gd" type="Script" id=1]
-[ext_resource path="res://assets/scribble_pack/PNG/Default/tile.png" type="Texture" id=2]
+[ext_resource path="res://assets/elements/EnergyRectField.svg" type="Texture" id=2]
 [ext_resource path="res://assets/scribble_pack/PNG/Default/tile_spike.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 69, 30 )
+extents = Vector2( 78, 30 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 31, 31 )
@@ -23,9 +23,9 @@ position = Vector2( 0, -30 )
 shape = SubResource( 1 )
 
 [node name="tile" type="Sprite" parent="RoverCollisionSensor"]
-modulate = Color( 0.141176, 0.52549, 0.576471, 0.0862745 )
-position = Vector2( -0.5, -30 )
-scale = Vector2( 2.17188, 1 )
+modulate = Color( 1, 1, 1, 0.12549 )
+position = Vector2( -1, -30 )
+scale = Vector2( 1.25, 1 )
 texture = ExtResource( 2 )
 
 [node name="mass" type="Label" parent="."]
