@@ -16,7 +16,7 @@ margin_bottom = 216.0
 [node name="highscore" type="Label" parent="VBoxContainer"]
 margin_right = 370.0
 margin_bottom = 14.0
-text = "RECORDS OF HIGHSCORES"
+text = "BEST RECORDS OF EXPERIMENT"
 
 [node name="MaxAsteroidsFell" type="Label" parent="VBoxContainer"]
 margin_top = 18.0

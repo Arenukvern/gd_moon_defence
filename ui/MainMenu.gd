@@ -29,6 +29,7 @@ func _on_HighscoreButton_button_up() -> void:
 	windowDialog.visible = true
 	self.is_highscore_window_active = true
 	self.is_help_window_active = false
+	self.is_plot_window_active = false
 	
 var is_help_window_active: bool = false setget set_is_help_window_active
 const HelpContentScene: = preload('res://ui/HelpContent.tscn')
@@ -47,3 +48,22 @@ func _on_HelpButton_button_up() -> void:
 	windowDialog.visible = true
 	self.is_highscore_window_active = false
 	self.is_help_window_active = true
+	self.is_plot_window_active = false
+
+var is_plot_window_active: bool = false setget set_is_plot_window_active
+const PlotContentScene: = preload('res://ui/PlotContent.tscn')
+var _plotContent
+func set_is_plot_window_active(isEnable: bool):
+	is_help_window_active = isEnable
+	if isEnable:
+		if not is_instance_valid(_plotContent):
+			_plotContent = PlotContentScene.instance()
+			windowDialog.add_child(_plotContent)
+	else:
+		if is_instance_valid(_plotContent):
+			_plotContent.queue_free()
+func _on_Plot_button_up() -> void:
+	windowDialog.visible = true
+	self.is_highscore_window_active = false
+	self.is_help_window_active = false
+	self.is_plot_window_active = true

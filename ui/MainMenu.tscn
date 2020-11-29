@@ -67,7 +67,6 @@ align = 1
 valign = 1
 
 [node name="ButtonsContainer" type="VBoxContainer" parent="."]
-editor/display_folded = true
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -80,40 +79,46 @@ custom_constants/separation = 6
 
 [node name="ContinueButton" type="Button" parent="ButtonsContainer"]
 margin_right = 217.0
-margin_bottom = 42.0
+margin_bottom = 34.0
 size_flags_vertical = 3
 text = "Continue"
 
 [node name="RestartMissionButton2" parent="ButtonsContainer" instance=ExtResource( 5 )]
-margin_top = 48.0
+margin_top = 40.0
 margin_right = 217.0
-margin_bottom = 90.0
+margin_bottom = 74.0
 text = "Restart Mission"
 next_scene_path = "res://levels/MoonFlat.tscn"
 
-[node name="HighscoreButton" type="Button" parent="ButtonsContainer"]
-margin_top = 96.0
+[node name="Plot" type="Button" parent="ButtonsContainer"]
+margin_top = 80.0
 margin_right = 217.0
-margin_bottom = 138.0
+margin_bottom = 114.0
 size_flags_vertical = 3
-text = "Highscore"
+text = "Plot"
+
+[node name="HighscoreButton" type="Button" parent="ButtonsContainer"]
+margin_top = 120.0
+margin_right = 217.0
+margin_bottom = 154.0
+size_flags_vertical = 3
+text = "Results"
 
 [node name="HelpButton" type="Button" parent="ButtonsContainer"]
-margin_top = 144.0
+margin_top = 160.0
 margin_right = 217.0
-margin_bottom = 186.0
+margin_bottom = 194.0
 size_flags_vertical = 3
 text = "Help"
 
 [node name="ExitButton" type="Button" parent="ButtonsContainer"]
-margin_top = 192.0
+margin_top = 200.0
 margin_right = 217.0
 margin_bottom = 234.0
 size_flags_vertical = 3
 text = "Exit"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-editor/display_folded = true
 
 [node name="WindowDialog" type="WindowDialog" parent="CanvasLayer"]
 modulate = Color( 0.760784, 0.85098, 0.933333, 0.92549 )
@@ -127,6 +132,7 @@ rect_min_size = Vector2( 400, 300 )
 theme = ExtResource( 1 )
 
 [connection signal="button_up" from="ButtonsContainer/ContinueButton" to="." method="_on_ContinueButton_button_up"]
+[connection signal="button_up" from="ButtonsContainer/Plot" to="." method="_on_Plot_button_up"]
 [connection signal="button_up" from="ButtonsContainer/HighscoreButton" to="." method="_on_HighscoreButton_button_up"]
 [connection signal="button_up" from="ButtonsContainer/HelpButton" to="." method="_on_HelpButton_button_up"]
 [connection signal="button_up" from="ButtonsContainer/ExitButton" to="." method="_on_ExitButton_button_up"]
