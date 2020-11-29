@@ -73,7 +73,7 @@ margin_bottom = 148.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
-text = "A"
+text = "DroidsLostCurrentHighscore"
 autowrap = true
 
 [node name="AsteroidsFellCurrentHighscore" type="Label" parent="ButtonsContainer"]
@@ -83,7 +83,7 @@ margin_bottom = 179.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
-text = "A"
+text = "AsteroidsFellCurrentHighscore"
 autowrap = true
 
 [node name="DroidsLimit" type="Label" parent="ButtonsContainer"]
@@ -93,7 +93,7 @@ margin_bottom = 211.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
-text = "A"
+text = "DroidsLimit"
 autowrap = true
 
 [connection signal="button_up" from="ButtonsContainer/OpenButton" to="ButtonsContainer/OpenButton" method="_on_OpenButton_button_up"]

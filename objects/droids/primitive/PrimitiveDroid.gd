@@ -58,11 +58,12 @@ var _tractorBeamFuelConsumption: float = 0.0
 
 func set_is_tractor_beam_enabled(isEnable: bool)->void:
 	is_tractor_beam_enabled = isEnable
-	if isEnable and not is_instance_valid(_tractorBeam):
-		_acceleration_current = acceleration_for_landing
-		_tractorBeam = TractorBeamScene.instance()
-		_tractorBeamFuelConsumption = _tractorBeam.fuel_consumption
-		root.call_deferred("add_child",_tractorBeam)
+	if isEnable :
+		if not is_instance_valid(_tractorBeam):
+			_acceleration_current = acceleration_for_landing
+			_tractorBeam = TractorBeamScene.instance()
+			_tractorBeamFuelConsumption = _tractorBeam.fuel_consumption
+			root.call_deferred("add_child",_tractorBeam)
 	elif is_instance_valid(_tractorBeam):
 		_tractorBeam.queue_free()
 		_tractorBeamFuelConsumption = 0.0
@@ -79,15 +80,16 @@ var _sensorFuelConsumption: float = 0.0
 
 func set_is_short_range_sensor_enabled(isEnable: bool)->void:
 	is_short_range_sensor_enabled = isEnable
-	if isEnable and not is_instance_valid(_shortRangeSensor):
-		_shortRangeSensor = ShortRangeSensorScene.instance()
-		_shortRangeSensor.connect(
-			_shortRangeSensor.signal_name_enable_tractor_beam, 
-			self, 
-			_shortRangeSensor.signal_func_name_enable_tractor_beam
-		)
-		_sensorFuelConsumption = _shortRangeSensor.fuel_consumption
-		root.add_child(_shortRangeSensor)
+	if isEnable:
+		if not is_instance_valid(_shortRangeSensor):
+			_shortRangeSensor = ShortRangeSensorScene.instance()
+			_shortRangeSensor.connect(
+				_shortRangeSensor.signal_name_enable_tractor_beam, 
+				self, 
+				_shortRangeSensor.signal_func_name_enable_tractor_beam
+			)
+			_sensorFuelConsumption = _shortRangeSensor.fuel_consumption
+			root.add_child(_shortRangeSensor)
 	elif is_instance_valid(_shortRangeSensor):
 		_shortRangeSensor.queue_free()
 		_sensorFuelConsumption = 0.0
@@ -131,9 +133,10 @@ func _connect_waypoints_manager()->void:
 
 func _on_reboot_droids_power()->void:
 	self.is_all_equipment_enabled = false
-	target_global_position = platform_global_position
-	_acceleration_current = acceleration_initial
-
+	if fuel_left > 0:
+		target_global_position = platform_global_position
+		_acceleration_current = acceleration_initial
+		
 func _on_close_waypoints_selection()->void:
 	self.is_droid_selected = false
 
