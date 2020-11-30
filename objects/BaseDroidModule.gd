@@ -19,8 +19,6 @@ func collides_check()->void:
 		if 'health_damage_system' in collision.collider:
 			collision.collider.reduce_health(mass_kg * 0.2)
 
-
-
 export var mass_kg: = 10.0
 export var DISTANCE_THRESHOLD: = 3.0
 var target_global_position: = Vector2.ZERO
