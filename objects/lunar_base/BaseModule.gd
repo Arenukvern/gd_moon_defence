@@ -37,5 +37,5 @@ func _init_healthComponents()->void:
 	health_damage_system.initSystem(components)
 
 func _ready() -> void:
-	mass_kg = 3000.0
+	mass_kg = 200.0
 	_init_healthComponents()
