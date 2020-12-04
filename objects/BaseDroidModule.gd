@@ -6,7 +6,7 @@ onready var projectRoot := get_tree().get_root()
 onready var uiState := projectRoot.get_node("/root/UIState")
 
 # !!! must be filled with base resourse components !!!
-var health_damage_system: HealthDamageSystem = HealthDamageSystem.new()
+onready var health_damage_system: HealthDamageSystem = HealthDamageSystem.new()
 func reduce_health(points: float) -> void:
 	health_damage_system.add_random_damage(points)
 	if health_damage_system.health <= 0:
@@ -40,5 +40,4 @@ func get_is_droid_in_target()->bool:
 	return not self.is_in_movement
 	
 const WaypointGd: = preload('res://objects/droids/Waypoint.gd') 
-onready var WaypointFactory: WaypointFactory = preload('res://objects/droids/WaypointFactory.gd').new() # Relative path
-onready var platformWaypoint = WaypointGd.new()
+onready var platformWaypoint: = WaypointGd.new()

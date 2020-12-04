@@ -2,7 +2,6 @@ extends BaseDroidModule
 
 class_name Droid
 
-
 # platform for refueling 
 var platform_global_position:= Vector2.ZERO
 export var DISTANCE_PLATFORM_THRESHOLD: = 50.0

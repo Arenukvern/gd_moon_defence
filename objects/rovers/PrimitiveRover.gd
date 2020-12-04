@@ -1,10 +1,10 @@
 extends Droid
 
 export var max_speed: = 100.0
-onready var root: = $'.'
-onready var massNode: Label = $'mass'
-onready var notEnoughSpaceNode: Label = $'warning_not_enough_space'
 var _total_moved_distance: = 0.0
+onready var root: = $'.'
+onready var notEnoughSpaceNode: Label = $'warning_not_enough_space'
+onready var massNode: Label = $'mass'
 
 
 # LOADING SECTION

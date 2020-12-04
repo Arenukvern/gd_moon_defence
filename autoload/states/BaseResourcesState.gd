@@ -1,6 +1,5 @@
 extends Node
 
-
 enum ComponentsTypes {
 	TITANIUM = 0,
 	GLASS = 1,

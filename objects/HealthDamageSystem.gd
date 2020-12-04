@@ -51,10 +51,3 @@ func recover_component(componentsArray: Array)->void:
 		else:
 			print('Wrong recover_component HealthDamageSystem: component is not Base Component!')
 
-
-
-
-
-
-
-
