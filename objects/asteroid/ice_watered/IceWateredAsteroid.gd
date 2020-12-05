@@ -13,7 +13,8 @@ func _ready() -> void:
 	define_target_position()
 	randomize()
 	mass = rand_range( 1,  mass_max)
-	
+	var mass_ratio = mass/ mass_max 
+	self.scale = Vector2(mass_ratio,mass_ratio) 
 	var iceResource:= BaseResourceFactory.getWaterIce(mass)
 	health_damage_system.initSystem( [ iceResource ] )
 
