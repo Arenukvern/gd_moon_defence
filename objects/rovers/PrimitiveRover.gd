@@ -25,7 +25,7 @@ func set_total_rover_mass_kg(newMass: float)->void:
 		reloadMassLabel(newMass)
 	
 func get_total_rover_mass_kg()->float:
-	return mass_kg + self.objects_loaded_mass_kg
+	return self.mass_kg + self.objects_loaded_mass_kg
 var objects_loaded: Array = []
 var objects_loaded_mass_kg:= 0.0 setget ,get_objects_loaded_mass_kg
 func get_objects_loaded_mass_kg()->float:
@@ -49,21 +49,24 @@ func get_loading_mass_capacity_kg_left()->float:
 	else:
 		return loading_mass_capacity_kg_max - self.objects_loaded_mass_kg
 
-export var fuel_consumption_coeff := 0.01
+export var fuel_consumption_coeff := 0.001
 var fuel_consumption := 0.0 setget , get_fuel_consumption
 func get_fuel_consumption()->float:
 	return (self.total_rover_mass_kg * fuel_consumption_coeff)
 
 func _ready() -> void:
-	mass_kg = 300.0
+	self.mass_capacity_kg = 300.0
 	initial_position = global_position
 	target_global_position = initial_position
 	platform_global_position = initial_position
 	_init_healthComponents()
+	_populate_waypoints_array()
+	self.fuel_left = self.fuel_capacity
+
 	
 func _physics_process(delta: float) -> void:
 	
-	if self.is_in_movement and not debug_is_fuel_infinite and fuel_left > 0 :
+	if self.is_in_movement and not debug_is_fuel_infinite and self.fuel_left > 0 :
 		move_rover()
 	
 	if self.is_droid_in_platform:
@@ -113,7 +116,9 @@ func _input(event: InputEvent) -> void:
 
 func selectFollowMeWaypoint(position: Vector2)->void:
 	target_global_position.x = position.x
+	_reposition_waypoints_array()
 	self.are_all_waypoints_shown = true
+	
 
 func move_rover()->void:
 #	calculate distance to eat fuel
@@ -136,40 +141,22 @@ func _recalculate_distances_and_eat_fuel()->void:
 	var dy: float = global_position.y - _previous_global_position.y
 	var distance: float = round(sqrt(dx*dx + dy*dy))
 	if distance == 0: return
-	fuel_left -= distance * self.fuel_consumption
+	self.fuel_left -= distance * self.fuel_consumption
 	_total_moved_distance += distance
 	_previous_global_position = global_position
-
-
-export var are_all_waypoints_shown: bool = false setget set_are_all_waypoints_shown
-func set_are_all_waypoints_shown(isEnable: bool)->void:
-	are_all_waypoints_shown= isEnable
-	clear_all_waypoints()
-	if isEnable:
-		for waypoint in self.waypoints_array:
-			var selection: Node = waypoint.waypoint_scene.instance()
-			selection.global_position = waypoint.global_position
-			projectRoot.add_child(selection)
-			_waypoints_selections_array.push_back(selection)
-
-func clear_all_waypoints():
-	for selection in _waypoints_selections_array:
-		if is_instance_valid(selection):
-			selection.queue_free()
-	_waypoints_selections_array.clear()
-
-var _waypoints_selections_array: Array = []
+	print(distance * self.fuel_consumption, ' fuel left: %s' %self.fuel_left)
 
 onready var targetWaypoint = WaypointGd.new()
 
-var waypoints_array: Array = [] setget ,get_waypoints_array
-func get_waypoints_array()-> Array:
-	platformWaypoint.global_position = platform_global_position
+func _populate_waypoints_array()-> void:
 	platformWaypoint.waypoint_scene = WaypointFactory.purple
-	targetWaypoint.global_position = target_global_position
 	targetWaypoint.waypoint_scene = WaypointFactory.yellow
-	return [platformWaypoint, targetWaypoint]
-
+	_reposition_waypoints_array()
+	_waypoints_array = [platformWaypoint, targetWaypoint]
+func _reposition_waypoints_array()-> void:
+	platformWaypoint.global_position = platform_global_position
+	targetWaypoint.global_position = target_global_position
+	
 # ROVER ACTIONS
 var is_rover_actions_active: bool = false setget set_is_rover_actions_active
 const RoverActionsScene:= preload('res://objects/rovers/RoverActions.tscn')
@@ -249,12 +236,12 @@ func _on_rover_actions_to_base()->void:
 	self.are_all_waypoints_shown = true
 	
 func _refuel_droid() -> void:
-	if fuel_left == fuel_capacity: return
+	if self.fuel_left == fuel_capacity: return
 
-	if fuel_left > fuel_capacity:
-		fuel_left = fuel_capacity
+	if self.fuel_left > fuel_capacity:
+		self.fuel_left = fuel_capacity
 	else:
-		fuel_left += refueling_consumption
+		self.fuel_left += refueling_consumption
 
 var rover_collision_droids: Dictionary = {}
 var rover_collision_asteroids: Dictionary = {}
