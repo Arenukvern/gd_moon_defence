@@ -227,7 +227,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if _acceleration_current >= _acceleration_explosition: 
-		queue_free()
+		self.reduce_health(self.health_damage_system.health)
 #		TODO: make explosition
 	
 	if not is_drop_droid:

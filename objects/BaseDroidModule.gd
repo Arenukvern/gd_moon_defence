@@ -13,6 +13,8 @@ func reduce_health(points: float) -> void:
 		uiState.addDroidFellToHighscore()
 		self.are_all_waypoints_shown = false
 		UIState.isWaypointsManagerOpen = false
+		DroidsState.remove_droid_from_state(self)
+		DroidsState.notifyDroidsOnAirUpdated()
 		queue_free()
 
 func collides_check()->void:

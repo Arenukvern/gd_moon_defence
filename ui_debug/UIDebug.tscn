@@ -24,31 +24,30 @@ theme = ExtResource( 2 )
 
 [node name="OpenMenuButton" parent="ButtonsContainer" instance=ExtResource( 3 )]
 margin_right = 253.0
-margin_bottom = 31.0
+margin_bottom = 30.0
 
 [node name="OpenButton" type="Button" parent="ButtonsContainer"]
-margin_top = 35.0
+margin_top = 34.0
 margin_right = 253.0
-margin_bottom = 56.0
+margin_bottom = 50.0
 custom_fonts/font = ExtResource( 4 )
 text = "Debug menu"
 flat = true
 script = ExtResource( 5 )
 
 [node name="SpawnAsteroids" type="Button" parent="ButtonsContainer"]
-margin_top = 60.0
+margin_top = 54.0
 margin_right = 253.0
-margin_bottom = 81.0
+margin_bottom = 70.0
 custom_fonts/font = ExtResource( 4 )
 text = "Spawn asteroids"
 flat = true
 script = ExtResource( 6 )
 
 [node name="SpawnAsteroidToMouseClick" type="HBoxContainer" parent="ButtonsContainer"]
-editor/display_folded = true
-margin_top = 85.0
+margin_top = 74.0
 margin_right = 253.0
-margin_bottom = 117.0
+margin_bottom = 106.0
 size_flags_horizontal = 3
 script = ExtResource( 7 )
 
@@ -67,9 +66,9 @@ margin_right = 253.0
 margin_bottom = 32.0
 
 [node name="DroidsLostCurrentHighscore" type="Label" parent="ButtonsContainer"]
-margin_top = 121.0
+margin_top = 110.0
 margin_right = 253.0
-margin_bottom = 148.0
+margin_bottom = 141.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
@@ -77,9 +76,9 @@ text = "DroidsLostCurrentHighscore"
 autowrap = true
 
 [node name="AsteroidsFellCurrentHighscore" type="Label" parent="ButtonsContainer"]
-margin_top = 152.0
+margin_top = 145.0
 margin_right = 253.0
-margin_bottom = 179.0
+margin_bottom = 176.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
@@ -87,7 +86,7 @@ text = "AsteroidsFellCurrentHighscore"
 autowrap = true
 
 [node name="DroidsLimit" type="Label" parent="ButtonsContainer"]
-margin_top = 183.0
+margin_top = 180.0
 margin_right = 253.0
 margin_bottom = 211.0
 size_flags_horizontal = 3
@@ -95,7 +94,6 @@ size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
 text = "DroidsLimit"
 autowrap = true
-
 [connection signal="button_up" from="ButtonsContainer/OpenButton" to="ButtonsContainer/OpenButton" method="_on_OpenButton_button_up"]
 [connection signal="button_up" from="ButtonsContainer/SpawnAsteroids" to="ButtonsContainer/SpawnAsteroids" method="_on_SpawnAsteroids_button_up"]
 [connection signal="button_up" from="ButtonsContainer/SpawnAsteroidToMouseClick/SpawnAsteroidToMouseClickButton" to="ButtonsContainer/SpawnAsteroidToMouseClick" method="_on_SpawnAsteroidToMouseClickButton_button_up"]

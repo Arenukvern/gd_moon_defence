@@ -144,7 +144,7 @@ func _recalculate_distances_and_eat_fuel()->void:
 	self.fuel_left -= distance * self.fuel_consumption
 	_total_moved_distance += distance
 	_previous_global_position = global_position
-	print(distance * self.fuel_consumption, ' fuel left: %s' %self.fuel_left)
+
 
 onready var targetWaypoint = WaypointGd.new()
 

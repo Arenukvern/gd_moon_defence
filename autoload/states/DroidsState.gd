@@ -7,13 +7,13 @@ export var acceleration_explosive_max: = 600.0
 export var acceleration_explosive_min: = 400.0
 const droid: = preload('res://objects/droids/primitive/PrimitiveDroid.tscn')
 export var maxDroidsQuantity: = 5.0
-var currentDroidsQuantity: = 0.0 setget ,get_currentDroidsQuantity
+var currentDroidsQuantity: = 0 setget ,get_currentDroidsQuantity
 signal droids_on_air_updated
 const signal_name_droids_on_air_updated: = 'droids_on_air_updated'
 const signal_func_name_droids_on_air_updated: = "_on_%s" % signal_name_droids_on_air_updated
-	
-func get_currentDroidsQuantity()->float:
-	var newSize= float(root.get_children().size())
+
+func get_currentDroidsQuantity()->int:
+	var newSize: = root.get_children().size()
 	return newSize
 
 func add_droid(targetGlobalPosition: Vector2, initialPosition: Vector2) -> void:
@@ -32,6 +32,10 @@ func add_droid(targetGlobalPosition: Vector2, initialPosition: Vector2) -> void:
 	droidInstance.acceleration_initial = acceleration_initial
 	root.add_child(droidInstance)
 	notifyDroidsOnAirUpdated()
+
+func remove_droid_from_state(droid)->void:
+	root.remove_child(droid)
+
 
 func clearChildren()->void:
 	for child in root.get_children():
