@@ -11,10 +11,7 @@ func _ready() -> void:
 	var start_x_position: = rand_range( -10,  _screen_dimension.x)
 	global_position = Vector2(start_x_position, - start_distance_surface_edge)
 	define_target_position()
-	randomize()
-	mass = rand_range( 1,  mass_max)
-	var mass_ratio = mass/ mass_max 
-	self.scale = Vector2(mass_ratio,mass_ratio) 
+
 	var iceResource:= BaseResourceFactory.getWaterIce(mass)
 	health_damage_system.initSystem( [ iceResource ] )
 

@@ -96,18 +96,18 @@ func set_is_selected(isSelect: bool)->void:
 var is_mouse_hovered: bool = false
 func _on_PrimitiveRover_mouse_entered() -> void:
 	is_mouse_hovered =true
-
 func _on_PrimitiveRover_mouse_exited() -> void:
 	is_mouse_hovered =false
 
 func _on_PrimitiveRover_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	var isLeftClick = InputHelper.isLeftClick(event)
-	if isLeftClick:
+	if isLeftClick :
 		self.is_selected = not self.is_selected
 
 func _input(event: InputEvent) -> void:
 	var isLeftClick = InputHelper.isLeftClick(event)
-	if isLeftClick and not is_mouse_hovered and is_selected:
+	
+	if isLeftClick and not is_mouse_hovered and is_selected and not _rover_actions.isHovered:
 		selectFollowMeWaypoint(event.position)
 		return
 	var isRightClick = InputHelper.isRightClick(event)
@@ -188,6 +188,14 @@ func connect_rover_actions()->void:
 		self,
 		_rover_actions.signal_func_name_rover_actions_to_base
 	)
+	_rover_actions.connect(
+		_rover_actions.signal_name_rover_actions_unload,
+		self,
+		_rover_actions.signal_func_name_rover_actions_unload
+	)
+
+
+
 
 onready var droidsFactory:DroidsFactory = preload('res://objects/droids/DroidsFactory.gd').new()
 onready var asteroidsFactory:AsteroidsFactory = preload('res://objects/asteroid/AsteroidFactory.gd').new()
