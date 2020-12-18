@@ -6,7 +6,7 @@ export var acceleration_initial: = 300.0
 export var acceleration_explosive_max: = 600.0
 export var acceleration_explosive_min: = 400.0
 const droid: = preload('res://objects/droids/primitive/PrimitiveDroid.tscn')
-export var maxDroidsQuantity: = 5.0
+export var maxDroidsQuantity: = 7.0
 var currentDroidsQuantity: = 0 setget ,get_currentDroidsQuantity
 signal droids_on_air_updated
 const signal_name_droids_on_air_updated: = 'droids_on_air_updated'
@@ -45,3 +45,7 @@ func clearChildren()->void:
 	
 func notifyDroidsOnAirUpdated()->void:
 	emit_signal(signal_name_droids_on_air_updated)
+
+func addCustomDroid(droidInstance)->void:
+	root.add_child(droidInstance)
+	notifyDroidsOnAirUpdated()

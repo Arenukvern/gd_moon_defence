@@ -4,6 +4,16 @@ class_name BaseDroidModule
 
 onready var projectRoot := get_tree().get_root()
 onready var uiState := projectRoot.get_node("/root/UIState")
+export var acceleration_for_landing: = 20.0
+export var acceleration_initial: = 100.0
+# current acceleration
+var _acceleration_current: = 100.0
+# current random acceleration when player can risk to run plasma
+# but it can exlosure if the acceleration_current will be more than
+# critical
+var _acceleration_explosition: = 100.0
+# distance between target position and current position 
+# droid should stop
 
 # !!! must be filled with base resourse components !!!
 onready var health_damage_system: HealthDamageSystem = HealthDamageSystem.new()
@@ -76,3 +86,4 @@ func clear_all_waypoints():
 	_waypoints_selections_array.clear()
 var _waypoints_array: Array = []
 var _waypoints_selections_array: Array = []
+

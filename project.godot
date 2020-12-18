@@ -35,6 +35,11 @@ _global_script_classes=[ {
 "path": "res://entities/BaseResourceFactory.gd"
 }, {
 "base": "Node",
+"class": "BuildingFactory",
+"language": "GDScript",
+"path": "res://objects/BuildingFactory.gd"
+}, {
+"base": "Node",
 "class": "DictionaryHelper",
 "language": "GDScript",
 "path": "res://helpers/DictionaryHelper.gd"
@@ -73,6 +78,11 @@ _global_script_classes=[ {
 "class": "MainMenu",
 "language": "GDScript",
 "path": "res://ui/MainMenu.gd"
+}, {
+"base": "Area2D",
+"class": "PlaceSelector",
+"language": "GDScript",
+"path": "res://objects/selectors/PlaceSelector.gd"
 }, {
 "base": "Droid",
 "class": "PrimitiveDroid",
@@ -120,6 +130,7 @@ _global_script_class_icons={
 "BaseDroidModule": "",
 "BaseResourceComponent": "",
 "BaseResourceFactory": "",
+"BuildingFactory": "",
 "DictionaryHelper": "",
 "Droid": "",
 "DroidSelection": "",
@@ -128,6 +139,7 @@ _global_script_class_icons={
 "IceWateredAsteroid": "",
 "InputHelper": "",
 "MainMenu": "",
+"PlaceSelector": "",
 "PrimitiveDroid": "",
 "RoverActions": "",
 "SaveLoadHelper": "",

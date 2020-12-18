@@ -1,8 +1,11 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/BuildMenu.gd" type="Script" id=1]
 
 [node name="BuildMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -42,3 +45,5 @@ margin_left = 195.0
 margin_right = 300.0
 margin_bottom = 20.0
 text = "Droid Platform"
+[connection signal="button_up" from="PanelContainer/CenterContainer/HBoxContainer/SpaceModule" to="." method="_on_SpaceModule_button_up"]
+[connection signal="button_up" from="PanelContainer/CenterContainer/HBoxContainer/DroidFactory" to="." method="_on_DroidFactory_button_up"]

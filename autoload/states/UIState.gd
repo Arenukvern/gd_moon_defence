@@ -18,6 +18,7 @@ func getSave():
 	return save_dict
 	
 onready var root: = get_tree().get_root()
+onready var me: = $'.'
 onready var scenesRoot: = root.get_node('ScenesRoot')
 var current_scene = null
 
@@ -159,5 +160,14 @@ func restartgame()->void:
 	resetCurrentHighscore()
 	goto_scene('res://levels/MoonFlat.tscn')
 
+const _placeSelectorScene: = preload("res://objects/selectors/PlaceSelector.tscn")
+var _placeSelector: PlaceSelector
 
-	
+var _is_building_selector_active: bool = false setget set_is_building_selector_active
+func set_is_building_selector_active(isActive:bool)->void:
+	_is_building_selector_active = isActive
+	if isActive:
+		_placeSelector = _placeSelectorScene.instance()
+		me.add_child(_placeSelector)
+	elif is_instance_valid(_placeSelector):
+		_placeSelector.queue_free()

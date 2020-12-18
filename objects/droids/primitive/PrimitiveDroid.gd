@@ -2,18 +2,10 @@ extends Droid
 
 class_name PrimitiveDroid
 
-export var acceleration_for_landing: = 20.0
-export var acceleration_initial: = 100.0
+
 export var acceleration_explosive_min: = 300.0
 export var acceleration_explosive_max: = 400.0
-# current acceleration
-var _acceleration_current: = 0.0
-# current random acceleration when player can risk to run plasma
-# but it can exlosure if the acceleration_current will be more than
-# critical
-var _acceleration_explosition: = 0.0
-# distance between target position and current position 
-# droid should stop
+
 
 export var DISTANCE_LANDING_THRESHOLD: = 50.0
 
