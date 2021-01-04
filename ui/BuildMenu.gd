@@ -20,6 +20,10 @@ func _input(event):
 	if isLeftClick :
 		uiState._is_building_selector_active = false
 		_place_building(get_global_mouse_position().x)
+		return 
+	var isRightClick = InputHelper.isRightClick(event)
+	if isRightClick:
+		uiState._is_building_selector_active = false
 		
 func _place_building(x: float)->void:
 #	add func
