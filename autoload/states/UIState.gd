@@ -166,7 +166,7 @@ var _placeSelector: PlaceSelector
 var _is_building_selector_active: bool = false setget set_is_building_selector_active
 func set_is_building_selector_active(isActive:bool)->void:
 	_is_building_selector_active = isActive
-	if isActive:
+	if isActive and not is_instance_valid(_placeSelector):
 		_placeSelector = _placeSelectorScene.instance()
 		me.add_child(_placeSelector)
 	elif is_instance_valid(_placeSelector):
