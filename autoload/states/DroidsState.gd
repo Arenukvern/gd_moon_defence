@@ -33,9 +33,9 @@ func add_droid(targetGlobalPosition: Vector2, initialPosition: Vector2) -> void:
 	root.add_child(droidInstance)
 	notifyDroidsOnAirUpdated()
 
-func remove_droid_from_state(droid)->void:
-	root.remove_child(droid)
-
+func remove_droid_from_state(droid: Node)->void:
+	if root.is_a_parent_of(droid):
+		root.remove_child(droid)
 
 func clearChildren()->void:
 	for child in root.get_children():
